@@ -1,0 +1,12 @@
+.bi-gridline {
+  line {
+    stroke: $text;
+  }
+  path {
+    display: none;
+  }
+
+  &.dashed-line {
+    stroke-dasharray: $dashed-path;
+  }
+}

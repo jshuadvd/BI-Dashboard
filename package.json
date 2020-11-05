@@ -45,7 +45,9 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "no-unused-vars": 1
+      "no-unused-vars": 1,
+      "no-bitwise": 0,
+      "no-plusplus": 0
     }
   },
   "browserslist": [
