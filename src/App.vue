@@ -41,7 +41,7 @@ export default {
     drawer: null,
     layout: [
       {
-        x: 0, y: 0, w: 12, h: 8, i: '0',
+        x: 0, y: 0, w: 6, h: 8, i: '0',
       },
     ],
     index: 1,

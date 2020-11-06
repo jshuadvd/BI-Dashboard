@@ -2,7 +2,14 @@ $text: #99aabb;
 
 $dashed-path: 2 2;
 
-$colors: #6672fb, #d8adf2;
+:root {
+  // default colors
+  $colors: #6672fb, #d8adf2;
+
+  @for $i from 0 to length($colors) {
+    --color-#{$i}: #{nth($colors, $i+1)};
+  }
+}
 
 .bi-chart-item {
   width: 100%;

@@ -9,23 +9,30 @@ export default {
       type: Number,
       default: 300,
     },
-    margin: {
-      type: Object,
-      default: () => ({
-        top: 20,
-        right: 20,
-        bottom: 20,
-        left: 20,
-      }),
+    top: {
+      type: Number,
+      default: 20,
+    },
+    right: {
+      type: Number,
+      default: 20,
+    },
+    bottom: {
+      type: Number,
+      default: 20,
+    },
+    left: {
+      type: Number,
+      default: 20,
     },
   },
 
   computed: {
     chartWidth() {
-      return this.width - this.margin.left - this.margin.right;
+      return this.width - this.left - this.right;
     },
     chartHeight() {
-      return this.height - this.margin.top - this.margin.bottom;
+      return this.height - this.top - this.bottom;
     },
   },
 };

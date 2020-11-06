@@ -57,10 +57,10 @@ export default {
   min-height: 100%;
 }
 .vue-grid-layout {
-    background: #eee;
+    background: #efefef;
 }
 .vue-grid-item:not(.vue-grid-placeholder) {
-    background: #ccc;
+    background: #eee;
     border: 1px solid black;
 }
 .vue-grid-item .resizing {
