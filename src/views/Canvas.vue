@@ -21,6 +21,11 @@
       :key="item.i"
     >
       <component :is="hashComponents[item.i]" />
+      <v-btn
+        small depressed
+        class="bi-btn"
+        @click="delItem(item.i)"
+      >X</v-btn>
     </grid-item>
   </grid-layout>
 </template>
@@ -36,12 +41,16 @@ export default {
       required: true,
     },
   },
-
   components: {
     GridLayout,
     GridItem,
   },
-
+  methods: {
+    // ind: layout元素的id(d.i)
+    delItem(ind) {
+      this.$emit('del-item', ind);
+    },
+  },
   data() {
     return {
       hashComponents: {
@@ -63,6 +72,11 @@ export default {
     background: #eee;
     border: 1px solid black;
 }
+
+.vue-grid-item {
+  position: relative;
+}
+
 .vue-grid-item .resizing {
     opacity: 0.9;
 }
@@ -104,5 +118,10 @@ export default {
     background-origin: content-box;
     box-sizing: border-box;
     cursor: pointer;
+}
+.v-btn.bi-btn {
+  position:absolute;
+  top:0px;
+  right:0px;
 }
 </style>

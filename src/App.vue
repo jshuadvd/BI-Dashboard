@@ -20,7 +20,7 @@
 
     <v-main>
       <!-- main -->
-      <Canvas :layout="layout" />
+      <Canvas :layout="layout" @del-item="delItem" />
     </v-main>
   </v-app>
 </template>
@@ -57,6 +57,9 @@ export default {
         i: this.index,
       });
       this.index += 1;
+    },
+    delItem(ind) {
+      this.layout = this.layout.filter((d) => d.i !== ind);
     },
   },
 };
