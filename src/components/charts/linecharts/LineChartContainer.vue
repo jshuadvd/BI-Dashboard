@@ -1,5 +1,6 @@
 <template>
   <div class="bi-chart-item">
+<<<<<<< HEAD
     <!-- <v-select
       :items="items"
       v-model="itemSelect"
@@ -10,6 +11,38 @@
       hide-details
       flat
     ></v-select> -->
+=======
+    <v-overlay v-if="loading" :value="loading" color="#fff" absolute z-index="600">
+      <v-progress-circular indeterminate size="64" color="#98cbfa"></v-progress-circular>
+    </v-overlay>
+
+    <div class="bi-container">
+      <div>
+        <div class="bi-chart-legends">
+          <span v-for="(d,i) in Object.keys(feeTimeSeries)" :key="d"
+            class="legend"
+          >
+            <i :style="{
+              background: `var(--color-${i})`,
+            }"></i>
+            {{d}}
+          </span>
+        </div>
+      </div>
+
+      <v-select
+        :items="items"
+        v-model="itemSelect"
+        item-text="title"
+        item-value="value"
+        dense
+        hide-details
+        flat
+        outlined
+      ></v-select>
+    </div>
+
+>>>>>>> de3cc5b... feat: 日历图和网络请求
     <linechart
       :datum="datum"
       :accessorX="accessorX"
@@ -17,12 +50,12 @@
       :xDomain="xDomain"
       :xScaleAcc="xScaleAcc"
       :yScaleAcc="yScaleAcc"
+      :left="80"
     />
   </div>
 </template>
 
 <script>
-import fakeData from '@/mock/a.json';
 import YEAR_HASH from '@/utils/yearHash';
 import LinechartVue from '../../linechart/Linechart.vue';
 
@@ -40,16 +73,25 @@ export default {
       ],
       itemSelect: 1,
 
+      startDay: new Date('2019-01-01').toISOString().substr(0, 10),
+      endDay: new Date().toISOString().substr(0, 10),
+
       // chartProps:
-      datum: Object.values(fakeData).map((d) => Object.entries(d)),
       accessorX: (d, i) => new Date(d[0]),
       xDomain: [new Date(Date.UTC(2020, 0, 0)), new Date(Date.UTC(2020, 11, 31))],
 
+      loading: true,
     };
   },
 
   computed: {
+<<<<<<< HEAD
     // 处理传入不同类型的数据，如医院、姓名
+=======
+    feeTimeSeries() {
+      return this.$store.state.feeTimeSeries;
+    },
+>>>>>>> de3cc5b... feat: 日历图和网络请求
     accessorY() {
       return (d, i) => d[1].value;
     },
@@ -65,17 +107,49 @@ export default {
       return (d, i) => {
         // TODO 目前的月日周切换没有接后台数据，但是已经写了更新逻辑
         const hashDay = YEAR_HASH[d[0]][itemSelect];
-        return fakeData[hashDay.slice(0, 4)][hashDay].value;
+        return this.feeTimeSeries[hashDay.slice(0, 4)][hashDay].value;
       };
+    },
+    datum() {
+      return Object.values(this.feeTimeSeries).map((d) => Object.entries(d));
     },
   },
 
   mounted() {
-    // console.log(this.datum);
+    if (!this.$store.feeTimeSeries) {
+      this.$store.dispatch('getFeeTimeSeries', {
+        fundType: 'public',
+        feeType: 'total',
+        granularity: this.items[this.itemSelect].key,
+        startDay: this.startDay,
+        endDay: this.endDay,
+      }).then(() => {
+        this.loading = false;
+      });
+    }
+  },
+
+  watch: {
+    itemSelect(value) {
+      this.loading = true;
+      this.$store.dispatch('getFeeTimeSeries', {
+        fundType: 'public',
+        feeType: 'total',
+        granularity: this.items[value].key,
+        startDay: this.startDay,
+        endDay: this.endDay,
+      }).then(() => {
+        this.loading = false;
+      });
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
-
+  .bi-chart-item {
+    padding: 2px 20px;
+    display:flex;
+    flex-direction: column;
+  }
 </style>

@@ -1,29 +1,5 @@
 <template>
   <parent-wrapper :width="width" :height="height">
-    <g clip-path ="url(#clip)"
-      :transform='`translate(${left}, ${top})`'
-    >
-      <path v-for="(d,i) in datum"
-        :key="i"
-        :d="line(d)"
-        :style="{
-          stroke: `var(--color-${i})`,
-        }"
-        class="bi-line animate-line"
-      />
-
-      <g class="grid-line">
-        <line :y2="chartHeight" v-for="n in 11" :key="n"
-          :transform="`translate(${scales.xScale(new Date(Date.UTC(2020, n, 1)))},0)`"
-          :id="new Date(Date.UTC(2020, n, 0))"
-          />
-        <line :transform="`translate(${scales.xScale(new Date(Date.UTC(2020, 12, 0)))},0)`"
-          :y2="chartHeight"  />
-        <line :transform="`translate(${scales.xScale(new Date(Date.UTC(2020, 0, 0)))},0)`"
-          :y2="chartHeight"  />
-      </g>
-    </g>
-
     <axis
       :transformX="transformX"
       :transformY="transformY"
@@ -32,6 +8,32 @@
       :xPath="xPath"
       :yPath="yPath"
     />
+
+    <g clip-path ="url(#clip)"
+      :transform='`translate(${left}, ${top})`'
+    >
+      <text class="axis-label" x="4" y="6">元</text>
+
+      <g class="grid-line">
+        <line :y2="chartHeight" v-for="n in 11" :key="n"
+          :transform="`translate(${scales.xScale(new Date(Date.UTC(2020, n, 1)))},0)`"
+          :id="new Date(Date.UTC(2020, n, 0))"
+        />
+        <line :transform="`translate(${scales.xScale(new Date(Date.UTC(2020, 12, 0)))},0)`"
+          :y2="chartHeight"  />
+        <line :transform="`translate(${scales.xScale(new Date(Date.UTC(2020, 0, 0)))},0)`"
+          :y2="chartHeight"  />
+      </g>
+
+      <path v-for="(d,i) in datum"
+        :key="i"
+        :d="line(d)"
+        :style="{
+          stroke: `var(--color-${i})`,
+        }"
+        class="bi-line animate-line"
+      />
+    </g>
     <!-- slot -->
     <slot></slot>
   </parent-wrapper>
@@ -193,25 +195,29 @@ export default {
 
 <style scoped lang="scss">
   path.animate-line {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
+    stroke-dasharray: 5000;
+    stroke-dashoffset: 5000;
 
     animation-name: draw;
-    animation-duration: 1.5s;
+    animation-duration: 4s;
     animation-fill-mode: forwards;
     animation-iteration-count: 1;
-    animation-timing-function: ease-in-out;
+    animation-timing-function: ease-out;
   }
 
   @keyframes draw {
-    85% {
-    }
+
     100% {
       stroke-dashoffset: 0;
+      stroke-dasharray: unset;
     }
   }
 
   .grid-line {
     stroke: #ccc;
+  }
+
+  .axis-label {
+    font-size: 12px;
   }
 </style>

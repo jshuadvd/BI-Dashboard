@@ -41,7 +41,10 @@ export default {
     drawer: null,
     layout: [
       {
-        x: 0, y: 0, w: 6, h: 8, i: '0',
+        x: 0, y: 0, w: 6, h: 12, i: '0',
+      },
+      {
+        x: 6, y: 0, w: 6, h: 12, i: '1',
       },
     ],
     index: 1,
@@ -67,6 +70,7 @@ export default {
 
 <style lang="scss">
   @import "~@/styles/svg.scss";
+  @import "~@/styles/legends.scss";
   @import "~@/styles/axis/gridline.scss";
 
   .bi-app-bar {

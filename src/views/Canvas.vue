@@ -32,6 +32,7 @@
 
 <script>
 import { GridLayout, GridItem } from 'vue-grid-layout';
+import CalendarContainerVue from '../components/charts/calendar/CalendarContainer.vue';
 import LineChartContainerVue from '../components/charts/linecharts/LineChartContainer.vue';
 import BarChartContaineVue from '../components/charts/barcharts/BarChartContainer.vue';
 
@@ -56,7 +57,11 @@ export default {
     return {
       hashComponents: {
         0: LineChartContainerVue,
+<<<<<<< HEAD
         1: BarChartContaineVue,
+=======
+        1: CalendarContainerVue,
+>>>>>>> de3cc5b... feat: 日历图和网络请求
       },
     };
   },
@@ -68,10 +73,10 @@ export default {
   min-height: 100%;
 }
 .vue-grid-layout {
-    background: #efefef;
+    background: #fff;
 }
 .vue-grid-item:not(.vue-grid-placeholder) {
-    background: #eee;
+    background: #fff;
     border: 1px solid black;
 }
 
