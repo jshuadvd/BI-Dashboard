@@ -1,6 +1,5 @@
 <template>
   <div class="bi-chart-item">
-<<<<<<< HEAD
     <!-- <v-select
       :items="items"
       v-model="itemSelect"
@@ -11,7 +10,6 @@
       hide-details
       flat
     ></v-select> -->
-=======
     <v-overlay v-if="loading" :value="loading" color="#fff" absolute z-index="600">
       <v-progress-circular indeterminate size="64" color="#98cbfa"></v-progress-circular>
     </v-overlay>
@@ -42,7 +40,6 @@
       ></v-select>
     </div>
 
->>>>>>> de3cc5b... feat: 日历图和网络请求
     <linechart
       :datum="datum"
       :accessorX="accessorX"
@@ -85,13 +82,9 @@ export default {
   },
 
   computed: {
-<<<<<<< HEAD
-    // 处理传入不同类型的数据，如医院、姓名
-=======
     feeTimeSeries() {
       return this.$store.state.feeTimeSeries;
     },
->>>>>>> de3cc5b... feat: 日历图和网络请求
     accessorY() {
       return (d, i) => d[1].value;
     },
