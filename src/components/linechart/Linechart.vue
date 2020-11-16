@@ -70,7 +70,6 @@ export default {
       type: Function,
     },
   },
-
   components: {
     ParentWrapper: ParentWrapperVue,
     Axis: AxisVue,

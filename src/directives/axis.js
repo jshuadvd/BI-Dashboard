@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 
 // <g v-axis:[axisMethod] = {scale: (required), ticks: , padding}
 
-function axisDirective(el, binding) {
+export default function (el, binding) {
   const axisKey = binding.arg;
   const axisMethod = {
     t: 'axisTop', r: 'axisRight', b: 'axisBottom', l: 'axisLeft',
@@ -10,7 +10,7 @@ function axisDirective(el, binding) {
   const methodArg = binding.value.scale;
 
   const {
-    ticks = 11, padding = 3, tickFormat = null, inner = 6, ticksAmount,
+    ticks = 11, padding = 2, tickFormat = null, inner = 6, ticksAmount,
   } = binding.value;
 
   // 选项，参考：
@@ -31,5 +31,3 @@ function axisDirective(el, binding) {
 
   d3.select(el).call(axis);
 }
-
-export default axisDirective;

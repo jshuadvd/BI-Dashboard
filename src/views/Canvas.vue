@@ -20,7 +20,7 @@
       :i="item.i"
       :key="item.i"
     >
-      <component :is="hashComponents[item.i]" />
+      <component :is="hashComponents[1]" />
       <v-btn
         small depressed
         class="bi-btn"
@@ -33,6 +33,7 @@
 <script>
 import { GridLayout, GridItem } from 'vue-grid-layout';
 import LineChartContainerVue from '../components/charts/linecharts/LineChartContainer.vue';
+import BarChartContaineVue from '../components/charts/barcharts/BarChartContainer.vue';
 
 export default {
   props: {
@@ -55,6 +56,7 @@ export default {
     return {
       hashComponents: {
         0: LineChartContainerVue,
+        1: BarChartContaineVue,
       },
     };
   },

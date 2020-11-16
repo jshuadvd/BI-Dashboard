@@ -10,7 +10,6 @@
       hide-details
       flat
     ></v-select> -->
-
     <linechart
       :datum="datum"
       :accessorX="accessorX"
@@ -50,9 +49,11 @@ export default {
   },
 
   computed: {
+    // 处理传入不同类型的数据，如医院、姓名
     accessorY() {
       return (d, i) => d[1].value;
     },
+    // 处理坐标轴的数据显示
     xScaleAcc() {
       const { itemSelect } = this;
 
@@ -70,7 +71,7 @@ export default {
   },
 
   mounted() {
-    // console.log(YEAR_HASH);
+    // console.log(this.datum);
   },
 };
 </script>
