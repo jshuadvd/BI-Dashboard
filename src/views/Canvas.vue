@@ -20,7 +20,7 @@
       :i="item.i"
       :key="item.i"
     >
-      <component :is="hashComponents[1]" />
+      <component :is="hashComponents[item.i]" />
       <v-btn
         small depressed
         class="bi-btn"
@@ -57,11 +57,8 @@ export default {
     return {
       hashComponents: {
         0: LineChartContainerVue,
-<<<<<<< HEAD
-        1: BarChartContaineVue,
-=======
+        2: BarChartContaineVue,
         1: CalendarContainerVue,
->>>>>>> de3cc5b... feat: 日历图和网络请求
       },
     };
   },
