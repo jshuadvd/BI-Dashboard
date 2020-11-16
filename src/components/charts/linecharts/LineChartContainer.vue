@@ -1,15 +1,5 @@
 <template>
   <div class="bi-chart-item">
-    <!-- <v-select
-      :items="items"
-      v-model="itemSelect"
-      item-text="title"
-      item-value="value"
-      solo
-      dense
-      hide-details
-      flat
-    ></v-select> -->
     <v-overlay v-if="loading" :value="loading" color="#fff" absolute z-index="600">
       <v-progress-circular indeterminate size="64" color="#98cbfa"></v-progress-circular>
     </v-overlay>
