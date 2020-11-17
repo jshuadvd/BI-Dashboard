@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-img src="@/assets/landing/main.png" />
+    <v-img src="@/site/assets/landing/main.png" />
     <div class="content">
       <header>
         <ul class="text-md-body-1 text-lg-body-1 text-xl-body-1">
@@ -59,10 +59,10 @@
 </template>
 
 <script>
-import Icon2 from '@/site/assets/landing/首页 icon_2.svg';
 import Icon4 from '@/site/assets/landing/icon_4.svg';
 import Icon5 from '@/site/assets/landing/icon_5.svg';
 import Icon6 from '@/site/assets/landing/icon_6.svg';
+import Icon2 from '@/site/assets/landing/icon_2.svg';
 
 export default {
   name: 'Landing',

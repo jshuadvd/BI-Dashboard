@@ -63,7 +63,7 @@
           <div class="c-header">
             <p class="chart-title">2020年均次指标</p>
             <div class="img-wrapper">
-              <img src="@/assets/warning/图例2.png"/>
+              <img src="@/site/assets/warning/图例2.png"/>
             </div>
           </div>
           <!-- 图表一 -->
@@ -87,7 +87,7 @@
             <div class="c-header">
               <p class="chart-title">2020年年度指标</p>
               <div class="img-wrapper">
-                <img src="@/assets/warning/图例3.png"/>
+                <img src="@/site/assets/warning/图例3.png"/>
               </div>
             </div>
 

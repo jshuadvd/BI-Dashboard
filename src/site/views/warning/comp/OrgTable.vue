@@ -80,7 +80,7 @@
       <v-sheet v-if="tabIndex === 4 && datum.length > 0" class="chart">
         <div class="legends">
           <div class="img-wrapper">
-            <img src="@/assets/warning/图例.png"/>
+            <img src="@/site/assets/warning/图例.png"/>
           </div>
         </div>
 

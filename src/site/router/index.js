@@ -20,6 +20,13 @@ const routes = [
     component: Layout,
     children: [
       {
+        path: '/dashboard',
+        component: () => import('@/Dashboard.vue'),
+        meta: {
+          linkIndex: 3,
+        },
+      },
+      {
         path: 'monitor/:submenu/:routeType',
         component: () => import('../views/monitor/Monitor.vue'),
         name: '基金实时监测',

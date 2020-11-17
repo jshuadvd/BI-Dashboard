@@ -154,7 +154,7 @@ export default {
 <style scoped lang="scss">
   .bi-chart-item {
     padding: 2px 20px;
-    display:flex;
+    display: flex;
     flex-direction: column;
   }
 

@@ -10,7 +10,7 @@ export default {
 
 /**为了修改Vuetify中slot的样式，这个组件不设置scoped */
 <style lang="scss">
-  @import "@/styles/markercluster.scss";
+  @import "@/site/styles/markercluster.scss";
   header .v-input__slot {
     background: $she-bg!important;
   }

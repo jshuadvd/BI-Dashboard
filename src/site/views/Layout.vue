@@ -7,7 +7,7 @@
           <v-img
             height="2.5rem"
             contain
-            src="@/assets/common/header.png"
+            src="@/site/assets/common/header.png"
             @click="drawer = !drawer"
           ></v-img>
 
@@ -25,10 +25,11 @@
           <router-link to="/monitor"><MonitorIcon /></router-link>
           <router-link to="/search"><SearchIcon /></router-link>
           <router-link to="/warning"><WarningIcon /></router-link>
+          <router-link to="/dashboard" class="bi-svg"><BiIcon /></router-link>
         </div>
         <!-- NOTE v-if 是否是层级导航 -->
         <v-list nav dense
-          v-if="$route.meta.linkIndex!==1"
+          v-if="$route.meta.linkIndex<1"
         >
           <v-list-group
             v-for="(item,i) in links"
@@ -150,7 +151,7 @@
         <div class="icons">
           <div class="tool-btn"
             @click="toTable"
-          ><img src="@/assets/bingtu.png"/></div>
+          ><img src="@/site/assets/bingtu.png"/></div>
           <div class="tool-btn"><BackIcon/></div>
           <div class="tool-btn"><NextIcon/></div>
         </div>
@@ -182,6 +183,7 @@ import icon7 from '@/site/assets/common/icon_7.svg';
 import Icon1 from '@/site/assets/warning/1.svg';
 import Icon2 from '@/site/assets/warning/2.svg';
 import Icon3 from '@/site/assets/warning/3.svg';
+import BiIcon from '@/assets/logo.svg';
 
 import { ROUTE_PARAM, FUND_TYPE } from '@/site/util/type';
 
@@ -197,6 +199,7 @@ export default {
     Icon1,
     Icon2,
     Icon3,
+    BiIcon,
   },
   data: () => ({
     drawer: true,
@@ -205,6 +208,7 @@ export default {
       { title: 'monitor', icon: SearchIcon },
       { title: 'search', icon: MonitorIcon },
       { title: 'warning', icon: WarningIcon },
+      { title: 'dashboard', icon: BiIcon },
     ],
     mini: true,
     ROUTE_PARAM,
@@ -335,6 +339,14 @@ export default {
               { title: '参保人违规预警', href: '/warning/action/people' },
               { title: '药师违规预警', href: '/warning/action/doctor' },
             ],
+            icon: icon5,
+          },
+        ],
+        // TODO 获得用户的报表
+        [
+          {
+            title: '报表',
+            href: '/dashboard',
             icon: icon5,
           },
         ],
@@ -602,6 +614,10 @@ export default {
         }
       }
     }
+  }
+
+  .bi-svg {
+    transform: scale(1.6);
   }
 
 </style>
