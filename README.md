@@ -49,6 +49,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
   - /style: 样式
   - /mixins：公用的一些代码
   - /views: 视图
+  - /site: 一期的系统
 
 ### css说明
 - global.scss: 全局样式
