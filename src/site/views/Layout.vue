@@ -29,7 +29,7 @@
         </div>
         <!-- NOTE v-if 是否是层级导航 -->
         <v-list nav dense
-          v-if="$route.meta.linkIndex<1"
+          v-if="$route.meta.linkIndex!==1"
         >
           <v-list-group
             v-for="(item,i) in links"
@@ -345,8 +345,16 @@ export default {
         // TODO 获得用户的报表
         [
           {
-            title: '报表',
-            href: '/dashboard',
+            title: '自定义报表',
+            items: [
+              { title: '未命名报表', href: '/dashboard' },
+            ],
+            icon: icon5,
+          },
+          {
+            title: '系统模板',
+            items: [
+            ],
             icon: icon5,
           },
         ],

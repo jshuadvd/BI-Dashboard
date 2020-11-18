@@ -1,4 +1,10 @@
 // override the framework defaults
 // checkout https://vuetifyjs.com/en/features/sass-variables/#example-variable-file
 
-$select-chips-dense-selections-min-height: 30px;
+$select-chips-dense-selections-min-height: 2px;
+// $slider-thumb-size: 1px;
+$slider-thumb-focused-size-increase: 2px;
+$select-prefix-line-height: 14px;
+$select-small-chips-selections-min-height: 2px;
+$select-small-chips-dense-selections-min-height: 2px;
+$input-max-height: 2px;

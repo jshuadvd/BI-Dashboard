@@ -24,6 +24,7 @@ const routes = [
         component: () => import('@/Dashboard.vue'),
         meta: {
           linkIndex: 3,
+          activeIndex: 0,
         },
       },
       {
