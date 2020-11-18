@@ -39,6 +39,8 @@
           </div>
         </div>
       </Tooltip>
+
+      <float-btn-vue @click="toStore"/>
     </div>
 
     <v-divider></v-divider>
@@ -92,6 +94,7 @@ import LineChart from '@/site/components/LineChart.vue';
 import Calendar from '@/site/components/Calendar.vue';
 import Tooltip from '@/site/components/Tooltip.vue';
 import * as d3 from 'd3';
+import FloatBtnVue from '../../../components/tools/FloatBtn.vue';
 
 const chart1Size = {
   width: 1200,
@@ -160,6 +163,7 @@ export default {
     LineChart,
     Calendar,
     Tooltip,
+    FloatBtnVue,
   },
 
   props: {
@@ -362,6 +366,11 @@ export default {
       this.colorScale = extent.map((e) => d3.scaleLinear()
         .range(['#73cdbb', '#fff', '#eb745f'])
         .domain([-e, 0, e]));
+    },
+
+    toStore() {
+      // 存储linechart
+      this.$emit('store-linechart');
     },
   },
 

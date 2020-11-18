@@ -4,6 +4,8 @@
       <v-progress-circular indeterminate size="64" color="#98cbfa"></v-progress-circular>
     </v-overlay>
 
+    <h3 class="text-lg-h6 text-md-h6">{{chartTitle}} | {{subTitle}}</h3>
+
     <div class="bi-container">
       <div>
         <div class="bi-chart-legends">
@@ -18,26 +20,28 @@
         </div>
       </div>
 
-      <v-select
-        :items="items"
-        v-model="itemSelect"
-        item-text="title"
-        item-value="value"
-        dense
-        hide-details
-        flat
-        outlined
-      ></v-select>
+      <div class="legends">
+        <div>
+          {{startDay}} - {{endDay}}
+        </div>
+
+        <div>
+          {{items[itemSelect].title}}
+        </div>
+      </div>
+
     </div>
 
     <linechart
+      v-if="Object.keys(datum).length > 0"
       :datum="datum"
       :accessorX="accessorX"
       :accessorY="accessorY"
       :xDomain="xDomain"
       :xScaleAcc="xScaleAcc"
       :yScaleAcc="yScaleAcc"
-      :left="80"
+      :left="60"
+      :top="0"
     />
   </div>
 </template>
@@ -47,6 +51,10 @@ import YEAR_HASH from '@/utils/yearHash';
 import LinechartVue from '../../linechart/Linechart.vue';
 
 export default {
+  props: {
+    status: Object,
+  },
+
   components: {
     Linechart: LinechartVue,
   },
@@ -68,12 +76,14 @@ export default {
       xDomain: [new Date(Date.UTC(2020, 0, 0)), new Date(Date.UTC(2020, 11, 31))],
 
       loading: true,
+      chartTitle: '公立医院',
+      subTitle: '总医药费用',
     };
   },
 
   computed: {
     feeTimeSeries() {
-      return this.$store.state.feeTimeSeries;
+      return this.$store.state.feeTimeSeries || {};
     },
     accessorY() {
       return (d, i) => d[1].value;
@@ -90,11 +100,15 @@ export default {
       return (d, i) => {
         // TODO 目前的月日周切换没有接后台数据，但是已经写了更新逻辑
         const hashDay = YEAR_HASH[d[0]][itemSelect];
-        return this.feeTimeSeries[hashDay.slice(0, 4)][hashDay].value;
+        const data = this.feeTimeSeries[hashDay.slice(0, 4)][hashDay];
+        return data ? data.value : 0;
       };
     },
     datum() {
-      return Object.values(this.feeTimeSeries).map((d) => Object.entries(d));
+      if (this.feeTimeSeries) {
+        return Object.values(this.feeTimeSeries).map((d) => Object.entries(d));
+      }
+      return [];
     },
   },
 
@@ -110,6 +124,9 @@ export default {
         this.loading = false;
       });
     }
+
+    // 通过status，设置数据
+    this.initStatus();
   },
 
   watch: {
@@ -126,13 +143,42 @@ export default {
       });
     },
   },
+
+  methods: {
+    initStatus() {
+      const {
+        chartTitle, subTitle, startDay, endDay, itemSelect,
+      } = this.status.data;
+      this.chartTitle = chartTitle;
+      this.subTitle = subTitle;
+      this.startDay = startDay;
+      this.endDay = endDay;
+      this.itemSelect = itemSelect;
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
   .bi-chart-item {
-    padding: 2px 20px;
+    padding: 10px;
     display:flex;
     flex-direction: column;
+
+    .bi-container {
+      margin: 10px 0 0 0;
+    }
+
+    .legends {
+      display: flex;
+    }
+
+    .legends div{
+      border: 1px solid #cfcfcf;
+      border-radius: 4px;
+      padding: 4px 10px;
+      min-width: 40px;
+      margin: 0 3px;
+    }
   }
 </style>

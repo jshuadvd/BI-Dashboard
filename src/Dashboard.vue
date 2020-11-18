@@ -68,17 +68,7 @@ export default {
 
   data: () => ({
     drawer: null,
-    layout: [
-      {
-        x: 0, y: 0, w: 6, h: 12, i: '0',
-      },
-      {
-        x: 6, y: 0, w: 6, h: 12, i: '1',
-      },
-      {
-        x: 0, y: 12, w: 6, h: 12, i: '2',
-      },
-    ],
+    layout: [],
     index: 1,
     // 报名的名字
     title: '未命名报表',
@@ -87,6 +77,21 @@ export default {
     // 编辑还是保存
     dashStatus: 0,
   }),
+
+  mounted() {
+    const charts = JSON.parse(localStorage.charts);
+    if (charts) {
+      this.layout = charts.map((chart) => ({
+        x: 0,
+        y: 0,
+        w: 6,
+        h: 12,
+        i: chart.id,
+        status: chart.status,
+        type: chart.type,
+      }));
+    }
+  },
 
   methods: {
     addItem() {
@@ -101,6 +106,12 @@ export default {
     },
     delItem(ind) {
       this.layout = this.layout.filter((d) => d.i !== ind);
+      let { charts } = localStorage;
+      if (charts) {
+        charts = JSON.parse(charts);
+      }
+      charts = charts.filter((chart) => chart.id !== ind);
+      localStorage.setItem('charts', JSON.stringify(charts));
     },
     editTodo(todo) {
       this.edited = todo;
@@ -110,6 +121,7 @@ export default {
 </script>
 
 <style lang="scss">
+  @import "~@/styles/variables.scss";
   @import "~@/styles/svg.scss";
   @import "~@/styles/legends.scss";
   @import "~@/styles/axis/gridline.scss";
@@ -174,8 +186,10 @@ export default {
     }
 
     .bi-canvas {
-      transition: margin-right .3s ease-in-out;
+      transition: all .3s ease-in-out;
       margin-right: 280px;
+      overflow: auto;
+      min-height: 80vh
     }
   }
 

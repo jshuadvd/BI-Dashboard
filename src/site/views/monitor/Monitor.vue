@@ -55,6 +55,7 @@
           :dataFetch="data"
           :subTitle="subTitles.length !==0 ? subTitles[index] : ''"
           :unit="menuSubtitle[tabActive] === '人次人头（次）'?'次':'元'"
+          @store-linechart="storeLinechart"
         />
       </div>
 
@@ -70,6 +71,7 @@ import {
 import { ROUTE_PARAM } from '@/site/util/type';
 import TimePicker from '@/site/components/small/TimePicker.vue';
 import timePicker from '@/site/mixins/date';
+import Chart from '@/config/Chart';
 import MonitorCharts from './MonitorCharts.vue';
 
 const FEE_TYPE = {
@@ -314,6 +316,29 @@ export default {
 
       this.datafetch = datafetch;
       this.loading = false;
+    },
+
+    storeLinechart() {
+      const { path } = this.$route;
+      const status = {
+        data: {
+          chartTitle: this.menuTitle,
+          subTitle: this.menuSubtitle[this.tabActive],
+          startDay: this.dateStart,
+          endDay: this.dateEnd,
+          itemSelect: this.itemSelect,
+        },
+      };
+      const data = new Chart('linechart', status);
+
+      let { charts } = localStorage;
+      if (charts === null || charts === undefined) {
+        charts = [];
+      } else {
+        charts = JSON.parse(charts);
+      }
+      charts.push(data);
+      localStorage.setItem('charts', JSON.stringify(charts));
     },
   },
 

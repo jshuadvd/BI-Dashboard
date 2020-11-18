@@ -12,15 +12,15 @@
     :auto-size="false"
     :prevent-collision="true"
   >
-    <grid-item v-for="item in layout"
+    <grid-item v-for="(item, index) in layout"
       :x="item.x"
       :y="item.y"
       :w="item.w"
       :h="item.h"
       :i="item.i"
-      :key="item.i"
+      :key="index"
     >
-      <component :is="hashComponents[item.i]" />
+      <component :is="hashComponents[item.type]" :status="item.status"/>
       <v-btn
         small depressed
         class="bi-btn"
@@ -32,9 +32,7 @@
 
 <script>
 import { GridLayout, GridItem } from 'vue-grid-layout';
-import CalendarContainerVue from '../components/charts/calendar/CalendarContainer.vue';
-import LineChartContainerVue from '../components/charts/linecharts/LineChartContainer.vue';
-import BarChartContaineVue from '../components/charts/barcharts/BarChartContainer.vue';
+import HASH from '@/config/hashComponents';
 
 export default {
   props: {
@@ -55,11 +53,7 @@ export default {
   },
   data() {
     return {
-      hashComponents: {
-        0: LineChartContainerVue,
-        2: BarChartContaineVue,
-        1: CalendarContainerVue,
-      },
+      hashComponents: HASH,
     };
   },
 };
