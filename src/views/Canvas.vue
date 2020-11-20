@@ -19,13 +19,16 @@
       :h="item.h"
       :i="item.i"
       :key="item.i"
+      :is-draggable = "item.drag"
     >
-      <component :is="hashComponents[item.i]" />
+      <component :is="hashComponents[item.i]"
+      @fixed-text="fixed(item.i,$event)"
+      />
       <v-btn
         small depressed
         class="bi-btn"
         @click="delItem(item.i)"
-      >X</v-btn>
+      >x</v-btn>
     </grid-item>
   </grid-layout>
 </template>
@@ -35,6 +38,7 @@ import { GridLayout, GridItem } from 'vue-grid-layout';
 import CalendarContainerVue from '../components/charts/calendar/CalendarContainer.vue';
 import LineChartContainerVue from '../components/charts/linecharts/LineChartContainer.vue';
 import BarChartContaineVue from '../components/charts/barcharts/BarChartContainer.vue';
+import RichTextVue from '../components/richtext/RichText.vue';
 
 export default {
   props: {
@@ -52,13 +56,18 @@ export default {
     delItem(ind) {
       this.$emit('del-item', ind);
     },
+    // f 是否固定文本框
+    fixed(i, f) {
+      this.layout[i].drag = f;
+    },
   },
   data() {
     return {
       hashComponents: {
         0: LineChartContainerVue,
-        2: BarChartContaineVue,
         1: CalendarContainerVue,
+        2: BarChartContaineVue,
+        3: RichTextVue,
       },
     };
   },
@@ -127,5 +136,10 @@ export default {
   position:absolute;
   top:0px;
   right:0px;
+}
+
+.bi-item-wrapper {
+  width: 100%;
+  height: 100%;
 }
 </style>

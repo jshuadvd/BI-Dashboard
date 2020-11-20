@@ -6,7 +6,7 @@
       right
     >
       <!-- sidenav -->
-      <sidenav @add-item="addItem" />
+      <sidenav @add-item="addItem" @add-rich-text="addItem"/>
     </v-navigation-drawer>
 
     <v-app-bar
@@ -41,13 +41,16 @@ export default {
     drawer: null,
     layout: [
       {
-        x: 0, y: 0, w: 6, h: 12, i: '0',
+        x: 0, y: 0, w: 6, h: 12, i: '0', drag: true,
       },
       {
-        x: 6, y: 0, w: 6, h: 12, i: '1',
+        x: 6, y: 0, w: 6, h: 12, i: '1', drag: true,
       },
       {
-        x: 0, y: 12, w: 6, h: 12, i: '2',
+        x: 0, y: 12, w: 6, h: 12, i: '2', drag: true,
+      },
+      {
+        x: 6, y: 12, w: 6, h: 12, i: '3', drag: true,
       },
     ],
     index: 1,
@@ -61,6 +64,7 @@ export default {
         w: 2,
         h: 2,
         i: this.index,
+        drag: true,
       });
       this.index += 1;
     },

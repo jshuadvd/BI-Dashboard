@@ -6,6 +6,11 @@
     >
       添加一个
     </v-btn>
+    <v-btn
+    dense
+    @click="addRichText">
+      添加文本框
+    </v-btn>
   </div>
 </template>
 
@@ -14,6 +19,9 @@ export default {
   methods: {
     addItem() {
       this.$emit('add-item');
+    },
+    addRichText() {
+      this.$emit('add-rich-text');
     },
   },
 };
