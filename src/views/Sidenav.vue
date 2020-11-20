@@ -59,7 +59,14 @@
       >
         添加一个
       </v-btn>
+
+        <!-- <v-btn
+        dense
+        @click="addRichText">
+        添加文本框
+      </v-btn> -->
     </div>
+
   </div>
 </template>
 
@@ -103,20 +110,12 @@ export default {
       this.$emit('add-item');
     },
     handleChange(e, i, pro) {
-      // console.log('handleChange', e, i, pro);
-
-      // let { charts } = localStorage;
-      // if (charts) {
-      //   charts = JSON.parse(charts);
-      // }
-
-      // charts[i].status[pro] = e;
-
-      // this.updateContents();
-      console.log(i, pro, e);
       this.$store.dispatch('updateChart', { i, pro, value: e });
     },
 
+    addRichText() {
+      this.$emit('add-rich-text');
+    },
   },
 };
 </script>

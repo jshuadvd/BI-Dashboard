@@ -19,12 +19,28 @@
       :h="item.h"
       :i="item.i"
       :key="index"
+      :is-draggable = "item.drag"
     >
       <div class="item-wrapper" @click="clickItem(index)">
         <component
           :is="hashComponents[item.type]"
           :status="item.status"
           :setting="item.setting"
+          @fixed-text="fixed(item.i,$event)"
+        />
+        <v-btn
+          small depressed
+          class="bi-btn"
+          @click="delItem(item.i)"
+        >X</v-btn>
+      </div>
+    </grid-item>
+
+    <grid-item>
+      <div class="item-wrapper" @click="clickItem(index)">
+        <component
+          :is="RichTextVue"
+          @fixed-text="fixed(item.i,$event)"
         />
         <v-btn
           small depressed
@@ -39,6 +55,7 @@
 <script>
 import { GridLayout, GridItem } from 'vue-grid-layout';
 import HASH from '@/config/hashComponents';
+import RichTextVue from '../components/richtext/RichText.vue';
 
 export default {
   props: {
@@ -50,6 +67,7 @@ export default {
   components: {
     GridLayout,
     GridItem,
+    RichTextVue,
   },
   methods: {
     // ind: layout元素的id(d.i)
@@ -58,6 +76,10 @@ export default {
     },
     clickItem(index) {
       this.$store.dispatch('updateId', index);
+    },
+    // f 是否固定文本框
+    fixed(i, f) {
+      this.layout[i].drag = f;
     },
   },
   data() {
