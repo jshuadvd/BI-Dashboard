@@ -62,7 +62,7 @@ export default {
             maxStack: 50,
             userOnly: false,
           },
-          toolbar: [],
+          toolbar: toolbarOptions,
         },
       },
     };
@@ -85,7 +85,12 @@ export default {
 </script>
 <style>
 .bi-ql-editor{
-  height: 100%;
+  height: 85%;
   width: 100%;
 }
+/* .ql-toolbar.ql-snow{
+  text-align: right;
+  height:0%;
+  width:0%;
+} */
 </style>
