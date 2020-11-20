@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       name: 'register-modules-example',
-      content: '123sadkjhsajkdhsakjdh爱斯达克回家哎是科技大会卡死就电话卡技术的1',
+      content: '测试文字测试文字',
       editorOption: {
         scrollingContainer: '#editorcontainer',
         placeholder: '',

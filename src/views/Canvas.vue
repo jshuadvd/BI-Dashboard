@@ -36,16 +36,23 @@
       </div>
     </grid-item>
 
-    <grid-item>
-      <div class="item-wrapper" @click="clickItem(index)">
+    <grid-item
+      :x="6"
+      :y="0"
+      :w="6"
+      :h="6"
+      :i="-1"
+      :is-draggable = "drag"
+    >
+      <div class="item-wrapper" @click="clickItem(-1)">
         <component
           :is="RichTextVue"
-          @fixed-text="fixed(item.i,$event)"
+          @fixed-text="fixed(-1,$event)"
         />
         <v-btn
           small depressed
           class="bi-btn"
-          @click="delItem(item.i)"
+          @click="delItem(-1)"
         >X</v-btn>
       </div>
     </grid-item>
@@ -79,12 +86,15 @@ export default {
     },
     // f 是否固定文本框
     fixed(i, f) {
-      this.layout[i].drag = f;
+      // this.layout[i].drag = f;
+      this.drag = f;
     },
   },
   data() {
     return {
       hashComponents: HASH,
+      drag: false,
+      RichTextVue,
     };
   },
 };

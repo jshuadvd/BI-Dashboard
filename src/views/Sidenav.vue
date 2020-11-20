@@ -10,7 +10,7 @@
         grow
       >
         <v-tab>数据</v-tab>
-        <v-tab>表格</v-tab>
+        <v-tab>图表</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab">
