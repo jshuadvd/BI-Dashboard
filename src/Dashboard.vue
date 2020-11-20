@@ -51,6 +51,10 @@
 
     <div class="bi-canvas">
       <!-- main -->
+      <div class="header">
+        <h1>{{header}}</h1>
+        <h3>创建者：{{author}}</h3>
+      </div>
       <Canvas :layout="layout" @del-item="delItem" />
     </div>
   </v-sheet>
@@ -78,6 +82,8 @@ export default {
     edited: false,
     // 编辑还是保存
     dashStatus: 0,
+    header: '医保智能检测系统汇报',
+    author: 'VAG',
   }),
 
   computed: {
@@ -185,7 +191,18 @@ export default {
       transition: all .3s ease-in-out;
       margin-right: 280px;
       overflow: auto;
-      min-height: 80vh
+      min-height: 80vh;
+
+      .header {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        margin: 5px 0;
+
+        h1, h3 {
+          font-weight: 300;
+        }
+      }
     }
   }
 
