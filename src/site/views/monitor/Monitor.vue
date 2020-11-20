@@ -72,6 +72,8 @@ import { ROUTE_PARAM } from '@/site/util/type';
 import TimePicker from '@/site/components/small/TimePicker.vue';
 import timePicker from '@/site/mixins/date';
 import Chart from '@/config/Chart';
+import { SELECT, DATE } from '@/config/setting';
+import Status from '@/config/status';
 import MonitorCharts from './MonitorCharts.vue';
 
 const FEE_TYPE = {
@@ -319,7 +321,6 @@ export default {
     },
 
     storeLinechart() {
-      const { path } = this.$route;
       const status = {
         data: {
           chartTitle: this.menuTitle,
@@ -329,16 +330,40 @@ export default {
           itemSelect: this.itemSelect,
         },
       };
-      const data = new Chart('linechart', status);
 
-      let { charts } = localStorage;
-      if (charts === null || charts === undefined) {
-        charts = [];
-      } else {
-        charts = JSON.parse(charts);
-      }
-      charts.push(data);
-      localStorage.setItem('charts', JSON.stringify(charts));
+      const data = new Chart('linechart', status, [
+        new Status(SELECT, {
+          items: this.items,
+          'item-text': 'title',
+          'item-value': 'value',
+        }, this.itemSelect),
+        // {
+        //   type: DATE,
+        //   props: {
+        //     dateEnd: this.dateEnd,
+        //     dateStart: this.dateStart,
+        //     menu1: this.menu1,
+        //     menu2: this.menu2,
+        //   },
+        //   events: {
+        //     updateMenu1: this.updateMenu1,
+        //     updateMenu2: this.updateMenu2,
+        //     updateDateStart: this.updateDateStart,
+        //     updateDateEnd: this.updateDateEndAction,
+        //   },
+        // },
+      ]);
+
+      this.$store.dispatch('addChart', data);
+
+      // let { charts } = localStorage;
+      // if (charts === null || charts === undefined) {
+      //   charts = [];
+      // } else {
+      //   charts = JSON.parse(charts);
+      // }
+      // charts.push(data);
+      // localStorage.setItem('charts', JSON.stringify(charts));
     },
   },
 

@@ -39,7 +39,9 @@
           </v-btn>
         </div>
         <div class="bi-btn">
-          <v-btn text medium outlined>
+          <v-btn text medium outlined
+            @click="$router.go(-1)"
+          >
             返回继续浏览
           </v-btn>
         </div>
@@ -55,6 +57,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Canvas from './views/Canvas.vue';
 import Sidenav from './views/Sidenav.vue';
 
@@ -68,7 +71,6 @@ export default {
 
   data: () => ({
     drawer: null,
-    layout: [],
     index: 1,
     // 报名的名字
     title: '未命名报表',
@@ -78,10 +80,9 @@ export default {
     dashStatus: 0,
   }),
 
-  mounted() {
-    const charts = JSON.parse(localStorage.charts);
-    if (charts) {
-      this.layout = charts.map((chart) => ({
+  computed: {
+    ...mapState({
+      layout: (state) => state.charts.map((chart) => ({
         x: 0,
         y: 0,
         w: 6,
@@ -89,8 +90,9 @@ export default {
         i: chart.id,
         status: chart.status,
         type: chart.type,
-      }));
-    }
+        setting: chart.setting,
+      })),
+    }),
   },
 
   methods: {
@@ -105,13 +107,7 @@ export default {
       this.index += 1;
     },
     delItem(ind) {
-      this.layout = this.layout.filter((d) => d.i !== ind);
-      let { charts } = localStorage;
-      if (charts) {
-        charts = JSON.parse(charts);
-      }
-      charts = charts.filter((chart) => chart.id !== ind);
-      localStorage.setItem('charts', JSON.stringify(charts));
+      this.$store.dispatch('deleteChart', ind);
     },
     editTodo(todo) {
       this.edited = todo;

@@ -66,7 +66,6 @@ export default {
         { value: 1, title: '周', key: 'week' },
         { value: 2, title: '日', key: 'day' },
       ],
-      itemSelect: 1,
 
       startDay: new Date('2019-01-01').toISOString().substr(0, 10),
       endDay: new Date().toISOString().substr(0, 10),
@@ -78,6 +77,7 @@ export default {
       loading: true,
       chartTitle: '公立医院',
       subTitle: '总医药费用',
+      itemSelectMap: 0,
     };
   },
 
@@ -110,6 +110,15 @@ export default {
       }
       return [];
     },
+
+    itemSelect: {
+      get() {
+        return this.itemSelectMap;
+      },
+      set(value) {
+        this.itemSelectMap = value;
+      },
+    },
   },
 
   mounted() {
@@ -141,6 +150,14 @@ export default {
       }).then(() => {
         this.loading = false;
       });
+    },
+
+    status: {
+      handler(newValue) {
+        this.itemSelectMap = newValue.data.itemSelect;
+      },
+      deep: true,
+      immediate: true,
     },
   },
 

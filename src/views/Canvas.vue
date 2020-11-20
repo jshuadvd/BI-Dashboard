@@ -20,12 +20,18 @@
       :i="item.i"
       :key="index"
     >
-      <component :is="hashComponents[item.type]" :status="item.status"/>
-      <v-btn
-        small depressed
-        class="bi-btn"
-        @click="delItem(item.i)"
-      >X</v-btn>
+      <div class="item-wrapper" @click="clickItem(index)">
+        <component
+          :is="hashComponents[item.type]"
+          :status="item.status"
+          :setting="item.setting"
+        />
+        <v-btn
+          small depressed
+          class="bi-btn"
+          @click="delItem(item.i)"
+        >X</v-btn>
+      </div>
     </grid-item>
   </grid-layout>
 </template>
@@ -49,6 +55,9 @@ export default {
     // ind: layout元素的id(d.i)
     delItem(ind) {
       this.$emit('del-item', ind);
+    },
+    clickItem(index) {
+      this.$store.dispatch('updateId', index);
     },
   },
   data() {
@@ -121,5 +130,12 @@ export default {
   position:absolute;
   top:0px;
   right:0px;
+}
+
+.bi-grid-layout {
+  .item-wrapper {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

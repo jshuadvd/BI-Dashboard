@@ -15,7 +15,14 @@
 
       <v-tabs-items v-model="tab">
         <v-tab-item>
-          tab1
+          <template v-for="(content, i) in contents">
+            <component
+              :is="content.type" :key="i"
+              v-bind="content.props"
+              v-on:change="handleChange($event, i, 'itemSelect')"
+              v-model="content.model"
+            ></component>
+          </template>
         </v-tab-item>
 
         <v-tab-item>
@@ -27,10 +34,10 @@
           <v-slider
             v-for="(item, i) in margin"
             :key="i"
+            v-model="item.value"
             :label="item.label"
             :max="item.range[1]"
             :min="item.range[0]"
-            v-model="item.value"
             :thumb-size="24"
             hide-details
             inverse-label
@@ -57,6 +64,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import { VSelect } from 'vuetify/lib';
+import TimePicker from '../site/components/small/TimePicker.vue';
+
 export default {
 
   data() {
@@ -72,10 +83,40 @@ export default {
       ],
     };
   },
+
+  components: {
+    VSelect,
+    TimePicker,
+  },
+
+  computed: {
+    ...mapState({
+      choseId: (state) => state.choseId,
+
+      contents: (state) => (state.charts[state.choseId] ? state.charts[state.choseId].setting : {}),
+    }),
+
+  },
+
   methods: {
     addItem() {
       this.$emit('add-item');
     },
+    handleChange(e, i, pro) {
+      // console.log('handleChange', e, i, pro);
+
+      // let { charts } = localStorage;
+      // if (charts) {
+      //   charts = JSON.parse(charts);
+      // }
+
+      // charts[i].status[pro] = e;
+
+      // this.updateContents();
+      console.log(i, pro, e);
+      this.$store.dispatch('updateChart', { i, pro, value: e });
+    },
+
   },
 };
 </script>

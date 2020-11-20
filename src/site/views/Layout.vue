@@ -162,7 +162,9 @@
     <v-main>
       <!-- Provides the application the proper gutter -->
       <v-container fluid>
-        <router-view :routeType="$route.params.routeType" />
+        <keep-alive>
+          <router-view :routeType="$route.params.routeType" />
+        </keep-alive>
       </v-container>
     </v-main>
 
