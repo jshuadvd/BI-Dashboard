@@ -1,7 +1,7 @@
 <template>
   <v-sheet :class="['bi-main', drawer?'hide-drawer':'']">
     <div class="bi-sidenav">
-      <sidenav @add-item="addItem" />
+      <sidenav @add-item="addItem" @add-rich-text="addRichText"/>
     </div>
 
     <v-toolbar class="bi-app-bar" dense>
@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import Chart from '@/config/Chart';
 import { mapState } from 'vuex';
 import Canvas from './views/Canvas.vue';
 import Sidenav from './views/Sidenav.vue';
@@ -93,6 +94,7 @@ export default {
         y: 0,
         w: 6,
         h: 12,
+        drag: true,
         i: chart.id,
         status: chart.status,
         type: chart.type,
@@ -111,6 +113,15 @@ export default {
         i: this.index,
       });
       this.index += 1;
+    },
+    addRichText() {
+      const status = {
+        data: {
+          content: '',
+        },
+      };
+      const data = new Chart('richtext', status, null);
+      this.$store.dispatch('addChart', data);
     },
     delItem(ind) {
       this.$store.dispatch('deleteChart', ind);

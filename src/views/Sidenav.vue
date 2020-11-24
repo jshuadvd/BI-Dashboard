@@ -59,12 +59,14 @@
       >
         添加一个
       </v-btn>
-
-        <!-- <v-btn
+    </div>
+    <div class="footer">
+      <v-btn
         dense
+        block
         @click="addRichText">
         添加文本框
-      </v-btn> -->
+      </v-btn>
     </div>
 
   </div>
@@ -151,7 +153,7 @@ export default {
     }
 
     .footer {
-      height: 5vh;
+      height: 6vh;
     }
   }
 </style>

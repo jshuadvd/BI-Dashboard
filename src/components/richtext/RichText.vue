@@ -50,11 +50,11 @@ export default {
   data() {
     return {
       name: 'register-modules-example',
-      content: '测试文字测试文字',
+      content: '测试文字测试文字测试文字测试文字测试文字测试文字',
       editorOption: {
         scrollingContainer: '#editorcontainer',
         placeholder: '',
-        // or 'bubble'
+        // 'bubble'/'snow'
         theme: 'snow',
         modules: {
           history: {
@@ -76,6 +76,7 @@ export default {
     },
     // 内容改变事件
     onEditorChange() {
+      console.log(this.content);
     },
     // 准备编辑器
     onEditorReady(editor) {
@@ -83,14 +84,9 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="scss">
 .bi-ql-editor{
-  height: 85%;
+  height: 100%;
   width: 100%;
 }
-/* .ql-toolbar.ql-snow{
-  text-align: right;
-  height:0%;
-  width:0%;
-} */
 </style>
