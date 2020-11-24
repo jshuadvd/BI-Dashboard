@@ -84,21 +84,44 @@ export default {
     dashStatus: 0,
     header: '医保智能检测系统汇报',
     author: 'VAG',
+    layout: [],
   }),
 
   computed: {
     ...mapState({
-      layout: (state) => state.charts.map((chart) => ({
-        x: 0,
-        y: 0,
-        w: 6,
-        h: 12,
-        i: chart.id,
-        status: chart.status,
-        type: chart.type,
-        setting: chart.setting,
-      })),
+      charts: (state) => state.charts,
     }),
+  },
+
+  watch: {
+    charts: {
+      handler(value) {
+        this.layout = value.map((chart) => ({
+          x: 0,
+          y: 0,
+          w: 6,
+          h: 12,
+          i: chart.id,
+          status: chart.status,
+          type: chart.type,
+          setting: chart.setting,
+        }));
+      },
+      deep: true,
+    },
+  },
+
+  mounted() {
+    this.layout = this.charts.map((chart) => ({
+      x: 0,
+      y: 0,
+      w: 6,
+      h: 12,
+      i: chart.id,
+      status: chart.status,
+      type: chart.type,
+      setting: chart.setting,
+    }));
   },
 
   methods: {
@@ -109,6 +132,8 @@ export default {
         w: 2,
         h: 2,
         i: this.index,
+        status: {},
+        setting: {},
       });
       this.index += 1;
     },
