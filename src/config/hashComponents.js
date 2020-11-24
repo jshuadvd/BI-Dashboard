@@ -5,7 +5,7 @@ import RichTextVue from '../components/richtext/RichText.vue';
 
 const hash = {
   linechart: LineChartContainerVue,
-  richText: RichTextVue,
+  richtext: RichTextVue,
 };
 
 export default hash;

@@ -19,6 +19,7 @@
       :h="item.h"
       :i="item.i"
       :key="index"
+      :is-draggable="item.drag"
     >
       <div class="item-wrapper" @click="clickItem(index)">
         <component
@@ -67,6 +68,10 @@ export default {
     },
     clickItem(index) {
       this.$store.dispatch('updateId', index);
+    },
+    // f 是否固定文本框
+    fixed(i, f) {
+      this.layout[i].drag = f;
     },
   },
 };

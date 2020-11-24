@@ -55,18 +55,10 @@
       <v-btn
         dense
         block
-        @click="addItem"
-      >
-        添加一个
-      </v-btn>
-
-        <!-- <v-btn
-        dense
         @click="addRichText">
         添加文本框
-      </v-btn> -->
+      </v-btn>
     </div>
-
   </div>
 </template>
 
@@ -151,7 +143,7 @@ export default {
     }
 
     .footer {
-      height: 5vh;
+      height: 6vh;
     }
   }
 </style>
