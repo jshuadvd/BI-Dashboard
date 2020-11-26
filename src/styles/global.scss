@@ -25,8 +25,21 @@ $primary: #1976d2;
 .bi-container {
   display: flex;
   justify-content: space-between;
+  margin: 10px 0;
 
   .v-input {
     max-width: 80px;
+  }
+}
+
+.bi-legends {
+  display: flex;
+
+  div{
+    border: 1px solid #cfcfcf;
+    border-radius: 4px;
+    padding: 4px 10px;
+    min-width: 40px;
+    margin: 0 3px;
   }
 }

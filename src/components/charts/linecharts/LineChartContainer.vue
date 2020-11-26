@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div class="legends">
+      <div class="bi-legends">
         <div>
           {{startDay}} - {{endDay}}
         </div>
@@ -184,18 +184,6 @@ export default {
 
     .bi-container {
       margin: 10px 0 0 0;
-    }
-
-    .legends {
-      display: flex;
-    }
-
-    .legends div{
-      border: 1px solid #cfcfcf;
-      border-radius: 4px;
-      padding: 4px 10px;
-      min-width: 40px;
-      margin: 0 3px;
     }
   }
 </style>

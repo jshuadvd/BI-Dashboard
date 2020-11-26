@@ -55,7 +55,8 @@
           :dataFetch="data"
           :subTitle="subTitles.length !==0 ? subTitles[index] : ''"
           :unit="menuSubtitle[tabActive] === '人次人头（次）'?'次':'元'"
-          @store-linechart="storeLinechart"
+          @store-linechart="storeLinechart(index)"
+          @store-calendar="storeCalendar(index)"
         />
       </div>
 
@@ -72,7 +73,7 @@ import { ROUTE_PARAM } from '@/site/util/type';
 import TimePicker from '@/site/components/small/TimePicker.vue';
 import timePicker from '@/site/mixins/date';
 import Chart from '@/config/Chart';
-import { SELECT, DATE } from '@/config/setting';
+import { SELECT, DATE, BTN_GROUP } from '@/config/setting';
 import Status from '@/config/status';
 import MonitorCharts from './MonitorCharts.vue';
 
@@ -321,49 +322,81 @@ export default {
     },
 
     storeLinechart() {
-      const status = {
-        data: {
-          chartTitle: this.menuTitle,
-          subTitle: this.menuSubtitle[this.tabActive],
-          startDay: this.dateStart,
-          endDay: this.dateEnd,
-          itemSelect: this.itemSelect,
-        },
-      };
+      // const status = {
+      //   data: {
+      //     chartTitle: this.menuTitle,
+      //     subTitle: this.menuSubtitle[this.tabActive],
+      //     startDay: this.dateStart,
+      //     endDay: this.dateEnd,
+      //     itemSelect: this.itemSelect,
+      //   },
+      //   size: { w: 6, h: 12 },
+      // };
 
-      const data = new Chart('linechart', status, [
+      // const data = new Chart('linechart', status, [
+      //   new Status(SELECT, {
+      //     items: this.items,
+      //     'item-text': 'title',
+      //     'item-value': 'value',
+      //   }, this.itemSelect),
+      // ]);
+
+      // this.$store.dispatch('addChart', data);
+    },
+
+    storeCalendar(index) {
+      const data = new Chart('calendar', {
+      //  status
+        size: { w: 6, h: 9 },
+        data: this.datafetch[index],
+        state: {
+          // chartTitle: this.menuTitle,
+          // subTitle: this.menuSubtitle[this.tabActive],
+        },
+        props: [
+          [{ propsKey: 'value', compProps: 'chartTitle' }],
+          [{ propsKey: 'value', compProps: 'subTitle' }],
+          [{ propsKey: 'value', compProps: 'type' }],
+          ['dateStart', 'dateEnd'],
+          [{ propsKey: 'value', compProps: 'itemSelect' }],
+        ],
+      }, [
+        new Status(SELECT, {
+          items: [
+            '公立医院',
+            '社区卫生服务中心',
+            '民营医院',
+            '其他社会办医',
+            '零售药店',
+          ],
+          value: this.menuTitle,
+        }),
+
+        new Status(SELECT, {
+          items: this.menuSubtitle,
+          value: this.menuSubtitle[this.tabActive],
+        }),
+        //  setting array
+        new Status(BTN_GROUP, {
+          options: ['同比', '环比'],
+          value: 1,
+        }),
+
+        new Status(DATE, {
+          dateStart: this.dateStart,
+          dateEnd: this.dateEnd,
+        }),
+
         new Status(SELECT, {
           items: this.items,
           'item-text': 'title',
           'item-value': 'value',
-        }, this.itemSelect),
-        // {
-        //   type: DATE,
-        //   props: {
-        //     dateEnd: this.dateEnd,
-        //     dateStart: this.dateStart,
-        //     menu1: this.menu1,
-        //     menu2: this.menu2,
-        //   },
-        //   events: {
-        //     updateMenu1: this.updateMenu1,
-        //     updateMenu2: this.updateMenu2,
-        //     updateDateStart: this.updateDateStart,
-        //     updateDateEnd: this.updateDateEndAction,
-        //   },
-        // },
+          value: this.itemSelect,
+        }),
+
       ]);
 
       this.$store.dispatch('addChart', data);
-
-      // let { charts } = localStorage;
-      // if (charts === null || charts === undefined) {
-      //   charts = [];
-      // } else {
-      //   charts = JSON.parse(charts);
-      // }
-      // charts.push(data);
-      // localStorage.setItem('charts', JSON.stringify(charts));
     },
   },
 

@@ -6,6 +6,7 @@ import RichTextVue from '../components/richtext/RichText.vue';
 const hash = {
   linechart: LineChartContainerVue,
   richtext: RichTextVue,
+  calendar: CalendarContainerVue,
 };
 
 export default hash;

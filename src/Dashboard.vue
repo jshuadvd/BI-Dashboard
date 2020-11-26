@@ -97,35 +97,38 @@ export default {
   watch: {
     charts: {
       handler(value) {
-        this.layout = value.map((chart) => ({
-          x: 0,
-          y: 0,
-          w: 6,
-          h: 12,
-          i: chart.id,
-          status: chart.status,
-          type: chart.type,
-          setting: chart.setting,
-        }));
+        this.mapChart(value);
       },
       deep: true,
     },
   },
 
   mounted() {
-    this.layout = this.charts.map((chart) => ({
-      x: 0,
-      y: 0,
-      w: 6,
-      h: 12,
-      i: chart.id,
-      status: chart.status,
-      type: chart.type,
-      setting: chart.setting,
-    }));
+    this.mapChart(this.charts);
   },
 
   methods: {
+    mapChart(value) {
+      this.layout = value.map((chart) => {
+        console.log(chart.props);
+        return ({
+          // x: (value.length * 2) % (this.colNum || 12),
+          // y: value.length + (this.colNum || 12),
+          x: chart.status.size.x || 0,
+          y: chart.status.size.y || 0,
+          w: chart.status.size.w || 6,
+          h: chart.status.size.h || 12,
+          i: chart.id,
+          type: chart.type,
+          setting: chart.setting,
+          status: {
+            data: chart.status.data,
+            ...chart.status.state,
+            ...chart.props,
+          },
+        });
+      });
+    },
     addItem() {
       this.layout.push({
         x: (this.layout.length * 2) % (this.colNum || 12),
