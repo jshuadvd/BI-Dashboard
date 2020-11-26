@@ -11,6 +11,34 @@ const Chart = (() => {
       id += 1;
       this.setting = setting;
     }
+
+    get props() {
+      const obj = {};
+
+      this.status.props.forEach((config, i) => {
+        const set = this.setting[i];
+        // console.log('getProps', config);
+
+        config.forEach((configItem) => {
+          if (configItem.constructor === String) {
+            obj[configItem] = set.props[configItem];
+          } else {
+            const value = set.props[configItem.propsKey];
+            obj[configItem.compProps] = value;
+          }
+        });
+      });
+
+      return obj;
+    }
+
+    updateSetting({ i, pro, value }) {
+      this.setting[i].props[pro] = value;
+    }
+
+    updateData(pro, data) {
+      this.status = { ...this.status, ...{ [pro]: data } };
+    }
   }
   return ChartClass;
 })();

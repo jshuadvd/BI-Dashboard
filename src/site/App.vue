@@ -224,13 +224,13 @@ export default {
     }
   }
 
-  .m-container .select-area {
-    .v-text-field.v-text-field--solo.v-input--dense > .v-input__control {
-      min-height: 20px!important;
-      line-height: 20px;
-      height: 20px;
-    }
-  }
+  // .m-container .select-area {
+  //   .v-text-field.v-text-field--solo.v-input--dense > .v-input__control {
+  //     min-height: 20px!important;
+  //     line-height: 20px;
+  //     height: 20px;
+  //   }
+  // }
 
   .min-height {
     .v-input__slot {

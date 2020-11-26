@@ -20,6 +20,8 @@
       :i="item.i"
       :key="index"
       :is-draggable="item.drag"
+      @resized="resizedEvent"
+      @moved="movedEvent"
     >
       <div class="item-wrapper" @click="clickItem(index)">
         <component
@@ -41,6 +43,7 @@
 <script>
 import { GridLayout, GridItem } from 'vue-grid-layout';
 import HASH from '@/config/hashComponents';
+import { mapState } from 'vuex';
 
 export default {
   props: {
@@ -61,6 +64,12 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState({
+      choseId: (state) => state.choseId,
+    }),
+  },
+
   methods: {
     // ind: layout元素的id(d.i)
     delItem(ind) {
@@ -72,6 +81,33 @@ export default {
     // f 是否固定文本框
     fixed(i, f) {
       this.layout[i].drag = f;
+    },
+    /**
+     *
+     * @param i the item id/index
+     * @param newH new height in grid rows
+     * @param newW new width in grid columns
+     * @param newHPx new height in pixels
+     * @param newWPx new width in pixels
+     *
+     */
+    resizedEvent(i, newH, newW, newHPx, newWPx) {
+      this.$store.dispatch('updateChartData',
+        {
+          choseId: this.choseId,
+          data: { h: newH, w: newW },
+          pro: 'size',
+        });
+      // console.log(`RESIZED i=${i}, H=${newH}, W=${newW}, H(px)=${newHPx}, W(px)=${newWPx}`);
+    },
+    movedEvent(i, x, y) {
+      this.$store.dispatch('updateChartData',
+        {
+          choseId: this.choseId,
+          data: { x, y },
+          pro: 'size',
+        });
+      // console.log(`MOVED i=${i}, X=${x}, Y=${y}`);
     },
   },
 };
@@ -91,6 +127,7 @@ export default {
 
 .vue-grid-item {
   position: relative;
+  touch-action: none
 }
 
 .vue-grid-item .resizing {

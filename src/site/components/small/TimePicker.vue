@@ -90,7 +90,6 @@ export default {
         this.$emit('updateMenu2', value);
       },
     },
-
     localDateStart: {
       get() {
         return this.dateStart;

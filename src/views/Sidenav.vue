@@ -16,12 +16,24 @@
       <v-tabs-items v-model="tab">
         <v-tab-item>
           <template v-for="(content, i) in contents">
-            <component
-              :is="content.type" :key="i"
-              v-bind="content.props"
-              v-on:change="handleChange($event, i, 'itemSelect')"
-              v-model="content.model"
-            ></component>
+            <template v-if="content.type === 'time' ">
+              <timepicker-wrapper-vue
+                :key="i"
+                v-bind="content.props"
+                v-on:update-start="handleChange($event,i,'dateStart')"
+                v-on:update-end="handleChange($event,i,'dateEnd')"
+              />
+            </template>
+
+            <template v-else>
+              <component
+                :is="content.type" :key="i"
+                v-bind="content.props"
+                v-on:change="handleChange($event, i, 'value')"
+              ></component>
+            </template>
+             <!-- v-model="content.model" -->
+
           </template>
         </v-tab-item>
 
@@ -66,6 +78,8 @@
 import { mapState } from 'vuex';
 import { VSelect } from 'vuetify/lib';
 import TimePicker from '../site/components/small/TimePicker.vue';
+import TimepickerWrapperVue from '../config/setting/TimepickerWrapper.vue';
+import Btngroup from '../config/setting/Btngroup.vue';
 
 export default {
 
@@ -86,6 +100,8 @@ export default {
   components: {
     VSelect,
     TimePicker,
+    TimepickerWrapperVue,
+    BiBtnGroup: Btngroup,
   },
 
   computed: {
@@ -101,8 +117,12 @@ export default {
     addItem() {
       this.$emit('add-item');
     },
+
     handleChange(e, i, pro) {
-      this.$store.dispatch('updateChart', { i, pro, value: e });
+      console.log('handleChange', e, i, pro);
+      this.$store.dispatch('updateChart', {
+        choseId: this.choseId, i, pro, value: e,
+      });
     },
 
     addRichText() {

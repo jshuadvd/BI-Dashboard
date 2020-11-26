@@ -3,4 +3,6 @@
 // 选择框
 export const SELECT = 'v-select';
 // 时间选择
-export const DATE = 'time-picker';
+export const DATE = 'time';
+// 按钮组
+export const BTN_GROUP = 'bi-btn-group';

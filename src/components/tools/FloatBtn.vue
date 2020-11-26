@@ -42,12 +42,13 @@ export default {
     position: absolute;
     display: flex;
     border-radius: 20px;
-    width: 145px;
-    padding: 10px 40px 10px 10px;
+    min-width: 500%;
+    padding: 10px 15px;
     box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
       0px 6px 10px 0px rgba(0, 0, 0, 0.14),
       0px 1px 18px 0px rgba(0, 0, 0, 0.12);
     color: #fff;
     opacity: .8;
+    margin-right: 50px;
   }
 </style>

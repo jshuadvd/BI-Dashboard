@@ -5,33 +5,22 @@
     </v-overlay>
 
     <div class="bi-container">
-      <div>
-        <div class="bi-chart-legends">
-         <span
-          :class="type === 1 ? 'active': ''"
-          @click="type = 1"
-        >
-          环比
-        </span>
-        <span
-          :class="type === 0 ? 'active': ''"
-          @click="type = 0"
-        >
-          同比
-        </span>
+      <h3 class="text-lg-h6 text-md-h6"> {{ chartTitle }} | {{subTitle}}</h3>
+      <div class="bi-chart-legends">
+        <span v-if="type===1" @click="type = 1">环比</span>
+        <span v-if="type===0" @click="type = 0">同比</span>
+
+        <div class="bi-legends">
+          <div>
+            {{startDay}} - {{endDay}}
+          </div>
+
+          <div>
+            {{items[+itemSelect].title}}
         </div>
       </div>
+    </div>
 
-      <v-select
-        :items="items"
-        v-model="itemSelect"
-        item-text="title"
-        item-value="value"
-        dense
-        hide-details
-        flat
-        outlined
-      ></v-select>
     </div>
 
     <div
@@ -54,9 +43,15 @@
 <script>
 import YEAR_HASH from '@/utils/yearHash';
 import * as d3 from 'd3';
+import { fetchFeeTimeSeries } from '@/site/util/http';
+import { mapState } from 'vuex';
 import CalendarVue from '../../calendar/Calendar.vue';
 
 export default {
+  props: {
+    status: Object,
+  },
+
   data() {
     return {
       items: [
@@ -64,16 +59,17 @@ export default {
         { value: 1, title: '周', key: 'week' },
         { value: 2, title: '日', key: 'day' },
       ],
-      itemSelect: 1,
-
-      startDay: new Date('2019-01-01').toISOString().substr(0, 10),
-      endDay: new Date().toISOString().substr(0, 10),
-
+      itemSelectMap: 0,
       // chartProps:
-      loading: true,
+      loading: false,
 
       // type为0： 同比， 1：环比
-      type: 1,
+      typeMap: 1,
+
+      startDayMap: 0,
+      endDayMap: 0,
+      subTitle: '',
+      chartTitle: '',
     };
   },
 
@@ -82,22 +78,62 @@ export default {
   },
 
   mounted() {
-    if (!this.$store.feeTimeSeries) {
-      this.$store.dispatch('getFeeTimeSeries', {
-        fundType: 'public',
-        feeType: 'total',
-        granularity: this.items[this.itemSelect].key,
-        startDay: this.startDay,
-        endDay: this.endDay,
-      }).then(() => {
-        this.loading = false;
-      });
-    }
+    // if (!this.$store.feeTimeSeries) {
+    //   this.$store.dispatch('getFeeTimeSeries', {
+    //     fundType: 'public',
+    //     feeType: 'total',
+    //     granularity: this.items[this.itemSelect].key,
+    //     startDay: this.startDay,
+    //     endDay: this.endDay,
+    //   }).then(() => {
+    //     this.loading = false;
+    //   });
+    // }
   },
 
   computed: {
+    ...mapState({
+      choseId: (state) => state.choseId,
+    }),
+    itemSelect: {
+      get() {
+        return this.itemSelectMap;
+      },
+      set(value) {
+        this.itemSelectMap = value;
+      },
+    },
+
+    startDay: {
+      get() {
+        return this.startDayMap;
+      },
+      set(value) {
+        this.startDayMap = value;
+      },
+    },
+
+    endDay: {
+      get() {
+        return this.endDayMap;
+      },
+      set(value) {
+        this.endDayMap = value;
+      },
+    },
+
+    type: {
+      get() {
+        return this.typeMap;
+      },
+      set(value) {
+        this.typeMap = value;
+      },
+    },
+
     feeTimeSeries() {
-      return this.$store.state.feeTimeSeries;
+      // return this.$store.state.feeTimeSeries;
+      return this.status.data;
     },
     valueType() {
       return ['year_ratio', 'chain_ratio'][this.type];
@@ -134,15 +170,41 @@ export default {
 
   watch: {
     itemSelect(value) {
-      this.loading = true;
-      if (this.feeTimeSeries) {
-        this.$store.dispatch('getFeeTimeSeries', {
+      this.getLoad({ granularity: this.items[value].key, endDay: this.endDay });
+    },
+    endDay(value) {
+      this.getLoad({ granularity: this.items[this.itemSelect].key, endDay: value });
+    },
+
+    status: {
+      handler(newValue) {
+        this.itemSelectMap = newValue.itemSelect;
+        this.startDayMap = newValue.dateStart;
+        this.endDayMap = newValue.dateEnd;
+        this.typeMap = newValue.type;
+        this.subTitle = newValue.subTitle;
+        this.chartTitle = newValue.chartTitle;
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+
+  methods: {
+    getLoad({ granularity, endDay }) {
+      if (endDay) {
+        this.loading = true;
+
+        fetchFeeTimeSeries({
           fundType: 'public',
           feeType: 'total',
-          granularity: this.items[value].key,
+          granularity,
           startDay: this.startDay,
-          endDay: this.endDay,
-        }).then(() => {
+          endDay,
+        }).then((res) => {
+          this.loading = false;
+          this.$store.dispatch('updateChartData', { choseId: this.choseId, data: res, pro: 'data' });
+        }).catch((err) => {
           this.loading = false;
         });
       }
@@ -159,12 +221,19 @@ export default {
   }
 
   .bi-container {
-    span {
-      flex: 0 0 60%;
+    display: flex;
+    flex-direction: column;
 
-      &.active {
-        color: $primary;
+    .bi-chart-legends {
+      justify-content: space-between;
+
+      span {
+        max-width: 100px;
       }
+    }
+
+    .bi-legends {
+      margin: 10px 0;
     }
   }
 </style>

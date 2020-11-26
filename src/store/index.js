@@ -55,14 +55,20 @@ export default new Vuex.Store({
     },
 
     changeChartProperty(state, payload) {
-      const { i, pro, value } = payload;
-      const tmpPropsData = state.charts[i].status;
-      console.log(i, state.charts[i], value);
+      const {
+        choseId, i, pro, value,
+      } = payload;
+      // 选择的第choseId个图表的第i个配置项，props中的pro属性，修改为value
+      const chart = state.charts[choseId];
+      chart.updateSetting({ i, pro, value });
+      Vue.set(state.charts, choseId, chart);
+    },
 
-      // tmpPropsData.updateStatus(pro, value);
-      tmpPropsData.data[pro] = value;
-
-      Vue.set(state.charts, i, { ...state.charts[i], ...{ props: tmpPropsData } });
+    changeChartData(state, payload) {
+      const { choseId, data, pro } = payload;
+      const chart = state.charts[choseId];
+      chart.updateData(pro, data);
+      Vue.set(state.charts, choseId, chart);
     },
   },
   actions: {
@@ -91,6 +97,10 @@ export default new Vuex.Store({
 
     updateChart({ commit }, payload) {
       commit('changeChartProperty', payload);
+    },
+
+    updateChartData({ commit }, payload) {
+      commit('changeChartData', payload);
     },
   },
   modules: {

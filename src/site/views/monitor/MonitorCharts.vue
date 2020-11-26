@@ -85,6 +85,9 @@
           </div>
         </div>
       </Tooltip>
+
+      <float-btn-vue @click="toStoreCalendar"/>
+
     </div>
   </div>
 </template>
@@ -371,6 +374,10 @@ export default {
     toStore() {
       // 存储linechart
       this.$emit('store-linechart');
+    },
+
+    toStoreCalendar() {
+      this.$emit('store-calendar');
     },
   },
 
