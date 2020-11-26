@@ -44,18 +44,21 @@ const toolbarOptions = [
   ['clean'],
 ];
 export default {
+  props: {
+    title: String,
+  },
   components: {
     quillEditor,
   },
   data() {
     return {
       name: 'register-modules-example',
-      content: '测试文字测试文字测试文字测试文字测试文字测试文字',
+      content: '<h1><strong class="ql-size-large">医保智能检测系统汇报</strong></h1>',
       editorOption: {
         scrollingContainer: '#editorcontainer',
         placeholder: '',
         // 'bubble'/'snow'
-        theme: 'snow',
+        theme: 'bubble',
         modules: {
           history: {
             delay: 1000,
@@ -88,5 +91,8 @@ export default {
 .bi-ql-editor{
   height: 100%;
   width: 100%;
+}
+.ql-bubble .ql-tooltip {
+    border-radius: 5px;
 }
 </style>

@@ -38,6 +38,14 @@ module.exports = {
           '^/api': '',
         },
       },
+      '/bi': {
+        target: 'http://47.112.221.76:8000/bi/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/bi': '',
+        },
+      },
     },
   },
 

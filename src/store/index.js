@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { updateDashboardTitle } from '@/utils/api';
 import { fetchFeeTimeSeries } from '../utils/http';
 
 Vue.use(Vuex);
@@ -9,6 +10,7 @@ export default new Vuex.Store({
     // wei_gui_lie_zhi_fei_yong
     // wei_gui_ren_shu: 0,
     // wei_gui_ji_gou_shu: 0,
+    title: '',
     menudata: [0, 0, 0],
 
     // 表格的数据
@@ -23,6 +25,10 @@ export default new Vuex.Store({
     charts: [],
   },
   mutations: {
+    SET_TITLE(state, newTitle) {
+      state.title = newTitle;
+    },
+
     SET_FEE_TIME_SERIES(state, data) {
       state.feeTimeSeries = data;
     },
@@ -63,6 +69,11 @@ export default new Vuex.Store({
     getFeeTimeSeries({ commit }, param) {
       fetchFeeTimeSeries(param).then((res) => {
         commit('SET_FEE_TIME_SERIES', res);
+      });
+    },
+    updateTitle({ commit }, newTitle) {
+      commit('SET_TITLE', newTitle);
+      updateDashboardTitle({ id: '1', title: newTitle }).then((res) => {
       });
     },
 

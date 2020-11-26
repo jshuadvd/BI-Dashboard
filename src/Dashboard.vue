@@ -10,7 +10,7 @@
       >
         <input
           v-if = "edited"
-          v-model = "title"
+          v-model = "titleMap"
           @blur= "edited = false; $emit('update')"
           @keyup.enter = "edited=false; $emit('update')"
         />
@@ -51,10 +51,9 @@
 
     <div class="bi-canvas">
       <!-- main -->
-      <div class="header">
-        <h1>{{header}}</h1>
-        <h3>创建者：{{author}}</h3>
-      </div>
+      <RichTextVue
+      class="header">
+      </RichTextVue>
       <Canvas :layout="layout" @del-item="delItem" />
     </div>
   </v-sheet>
@@ -63,8 +62,10 @@
 <script>
 import Chart from '@/config/Chart';
 import { mapState } from 'vuex';
+import { fetchDashboardTitle } from '@/utils/api';
 import Canvas from './views/Canvas.vue';
 import Sidenav from './views/Sidenav.vue';
+import RichTextVue from './components/richtext/RichText.vue';
 
 export default {
   name: 'App',
@@ -72,13 +73,12 @@ export default {
   components: {
     Canvas,
     Sidenav,
+    RichTextVue,
   },
 
   data: () => ({
     drawer: null,
     index: 1,
-    // 报名的名字
-    title: '未命名报表',
     // 是否在编辑状态
     edited: false,
     // 编辑还是保存
@@ -91,7 +91,17 @@ export default {
   computed: {
     ...mapState({
       charts: (state) => state.charts,
+      title: (state) => state.title,
     }),
+    titleMap: {
+      set(value) {
+        this.$store.dispatch('updateTitle', value);
+        console.log(this.title);
+      },
+      get() {
+        return this.title;
+      },
+    },
   },
 
   watch: {
@@ -102,6 +112,7 @@ export default {
           y: 0,
           w: 6,
           h: 12,
+          drag: true,
           i: chart.id,
           status: chart.status,
           type: chart.type,
@@ -118,11 +129,13 @@ export default {
       y: 0,
       w: 6,
       h: 12,
+      drag: true,
       i: chart.id,
       status: chart.status,
       type: chart.type,
       setting: chart.setting,
     }));
+    this.getDashboardTitle();
   },
 
   methods: {
@@ -133,6 +146,7 @@ export default {
         w: 2,
         h: 2,
         i: this.index,
+        drag: true,
         status: {},
         setting: {},
       });
@@ -152,6 +166,12 @@ export default {
     },
     editTodo(todo) {
       this.edited = todo;
+    },
+    async getDashboardTitle() {
+      const data = await fetchDashboardTitle({
+        id: '1',
+      });
+      this.$store.commit('SET_TITLE', data.title);
     },
   },
 };
@@ -202,6 +222,12 @@ export default {
       div {
         padding: 2px 7px;
         border: 1px solid #fff;
+      }
+      label {
+        display: block;
+        min-width: 80px;
+        min-height: 50px;
+        line-height: 50px;
       }
     }
   }
