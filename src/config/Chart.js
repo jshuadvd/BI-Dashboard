@@ -14,20 +14,21 @@ const Chart = (() => {
 
     get props() {
       const obj = {};
+      if (this.status && this.status.props && this.setting) {
+        this.status.props.forEach((config, i) => {
+          const set = this.setting[i];
+          // console.log('getProps', config);
 
-      this.status.props.forEach((config, i) => {
-        const set = this.setting[i];
-        // console.log('getProps', config);
-
-        config.forEach((configItem) => {
-          if (configItem.constructor === String) {
-            obj[configItem] = set.props[configItem];
-          } else {
-            const value = set.props[configItem.propsKey];
-            obj[configItem.compProps] = value;
-          }
+          config.forEach((configItem) => {
+            if (configItem.constructor === String) {
+              obj[configItem] = set.props[configItem];
+            } else {
+              const value = set.props[configItem.propsKey];
+              obj[configItem.compProps] = value;
+            }
+          });
         });
-      });
+      }
 
       return obj;
     }
