@@ -1,8 +1,20 @@
 <template>
   <parent-wrapper :width="width" :height="height">
     <defs>
-      <gradient />
+      <linearGradient id="gradient" x1="0" x2="0" y1="100%" y2="0%">
+        <stop offset="0%" stop-color="#2dff9d" />
+        <stop offset="50%" stop-color="#eee" />
+        <stop offset="100%" stop-color="#ff492d" />
+      </linearGradient>
     </defs>
+
+    <g :transform="`translate(${width-left+20}, ${10})`"
+      v-if="tooltip">
+        <text>{{colorSchema && colorSchema.domain()[0].toFixed(2)}}</text>
+        <rect x="10" y="12" class="legend"
+          :width="cellSize-cellPadding" :height="height/2" fill="url(#gradient)" />
+        <text y="85%">{{colorSchema && colorSchema.domain()[2].toFixed(2)}}</text>
+    </g>
 
     <text x="5" y="50%">{{year}}</text>
 
@@ -43,13 +55,13 @@
 import * as d3 from 'd3';
 import chartBand from '@/mixins/chartBand';
 import ParentWrapperVue from '../wrapper/ParentWrapper.vue';
-import GradientVue from '../defs/Gradient.vue';
+// import GradientVue from '../defs/Gradient.vue';
 
 const daysLabel = Array.from({ length: 7 }, (d, i) => `星期${'一二三四五六日'[i]}`);
 
 export default {
   props: {
-    cellSize: {
+    cellSizeProp: {
       type: Number,
       default: 10,
     },
@@ -63,11 +75,15 @@ export default {
     type: {
       type: Number,
     },
+    tooltip: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   components: {
     ParentWrapper: ParentWrapperVue,
-    Gradient: GradientVue,
+    // Gradient: GradientVue,
   },
 
   data() {
@@ -79,6 +95,9 @@ export default {
   },
 
   computed: {
+    cellSize() {
+      return this.chartWidth / 52;
+    },
     cellLength() {
       if (this.type) {
         return this.cellSize - this.cellPadding;
@@ -150,6 +169,6 @@ export default {
 
 <style scoped>
   text {
-    font-size: 14px;
+    font-size: 12px;
   }
 </style>
