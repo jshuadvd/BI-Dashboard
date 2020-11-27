@@ -109,11 +109,19 @@ export default {
 
   methods: {
     mapChart(value) {
-      this.layout = value.map((chart) => {
+      this.layout = value.map((chart, index) => {
         console.log(chart.props);
+
+        // let x = 0, y = 0;
+        // if (index > 0 && chart.status.size.x === undefined) {
+        //   const lastChart = value[index - 1];
+        //   if (lastChart.status.size.x + lastChart.status.size.w + chart.status.size.w <= 12) {
+        //     x = lastChart.status.size.x + lastChart.status.size.w;
+        //   } else {
+        //     y = lastChart.status.size.y + lastChart.status.size.h;
+        //   }
+        // }
         return ({
-          // x: (value.length * 2) % (this.colNum || 12),
-          // y: value.length + (this.colNum || 12),
           x: chart.status.size.x || 0,
           y: chart.status.size.y || 0,
           w: chart.status.size.w || 6,
