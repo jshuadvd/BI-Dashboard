@@ -26,7 +26,7 @@
         </div>
 
         <div>
-          {{items[itemSelect].title}}
+          {{items[itemSelect] && items[itemSelect].title}}
         </div>
       </div>
 
@@ -48,6 +48,9 @@
 
 <script>
 import YEAR_HASH from '@/utils/yearHash';
+import { fetchFeeTimeSeries } from '@/site/util/http';
+import { mapState } from 'vuex';
+import { TITLE_HASH, SUBTITLE_HASH } from '@/utils/param';
 import LinechartVue from '../../linechart/Linechart.vue';
 
 export default {
@@ -66,24 +69,27 @@ export default {
         { value: 1, title: '周', key: 'week' },
         { value: 2, title: '日', key: 'day' },
       ],
-
-      startDay: new Date('2019-01-01').toISOString().substr(0, 10),
-      endDay: new Date().toISOString().substr(0, 10),
-
       // chartProps:
       accessorX: (d, i) => new Date(d[0]),
       xDomain: [new Date(Date.UTC(2020, 0, 0)), new Date(Date.UTC(2020, 11, 31))],
 
       loading: true,
-      chartTitle: '公立医院',
-      subTitle: '总医药费用',
-      itemSelectMap: 0,
+
+      itemSelect: 0,
+      startDay: '',
+      endDay: '',
+      subTitle: '',
+      chartTitle: '',
     };
   },
 
   computed: {
+    ...mapState({
+      choseId: (state) => state.choseId,
+    }),
+
     feeTimeSeries() {
-      return this.$store.state.feeTimeSeries || {};
+      return this.status.data;
     },
     accessorY() {
       return (d, i) => d[1].value;
@@ -110,51 +116,28 @@ export default {
       }
       return [];
     },
-
-    itemSelect: {
-      get() {
-        return this.itemSelectMap;
-      },
-      set(value) {
-        this.itemSelectMap = value;
-      },
-    },
   },
-
-  mounted() {
-    if (!this.$store.feeTimeSeries) {
-      this.$store.dispatch('getFeeTimeSeries', {
-        fundType: 'public',
-        feeType: 'total',
-        granularity: this.items[this.itemSelect].key,
-        startDay: this.startDay,
-        endDay: this.endDay,
-      }).then(() => {
-        this.loading = false;
-      });
-    }
-
-    // 通过status，设置数据
-    this.initStatus();
-  },
-
   watch: {
     itemSelect(value) {
-      this.loading = true;
-      this.$store.dispatch('getFeeTimeSeries', {
-        fundType: 'public',
-        feeType: 'total',
-        granularity: this.items[value].key,
-        startDay: this.startDay,
-        endDay: this.endDay,
-      }).then(() => {
-        this.loading = false;
-      });
+      this.getLoad(this.items[value].key);
+    },
+    endDay(value) {
+      this.getLoad(undefined, value);
+    },
+    chartTitle(value) {
+      this.getLoad(undefined, undefined, value);
+    },
+    subTitle(value) {
+      this.getLoad(undefined, undefined, undefined, value);
     },
 
     status: {
       handler(newValue) {
-        this.itemSelectMap = newValue.data.itemSelect;
+        this.itemSelect = newValue.itemSelect;
+        this.startDay = newValue.dateStart;
+        this.endDay = newValue.dateEnd;
+        this.subTitle = newValue.subTitle;
+        this.chartTitle = newValue.chartTitle;
       },
       deep: true,
       immediate: true,
@@ -162,15 +145,28 @@ export default {
   },
 
   methods: {
-    initStatus() {
-      const {
-        chartTitle, subTitle, startDay, endDay, itemSelect,
-      } = this.status.data;
-      this.chartTitle = chartTitle;
-      this.subTitle = subTitle;
-      this.startDay = startDay;
-      this.endDay = endDay;
-      this.itemSelect = itemSelect;
+    getLoad(
+      granularity = this.items[this.itemSelect].key,
+      endDay = this.endDay,
+      fundType = this.chartTitle,
+      feeType = this.subTitle,
+    ) {
+      if (endDay) {
+        this.loading = true;
+
+        fetchFeeTimeSeries({
+          fundType: TITLE_HASH[fundType],
+          feeType: SUBTITLE_HASH[feeType],
+          granularity,
+          startDay: this.startDay,
+          endDay,
+        }).then((res) => {
+          this.loading = false;
+          this.$store.dispatch('updateChartData', { choseId: this.choseId, data: res, pro: 'data' });
+        }).catch((err) => {
+          this.loading = false;
+        });
+      }
     },
   },
 };

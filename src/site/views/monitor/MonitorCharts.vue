@@ -367,7 +367,7 @@ export default {
       this.lineDatum = data2;
       this.yscale = this.yscale.domain([0, maxValue * 1.1]).nice();
       this.colorScale = extent.map((e) => d3.scaleLinear()
-        .range(['#73cdbb', '#fff', '#eb745f'])
+        .range(['#2dff9d', '#fff', '#ff492d'])
         .domain([-e, 0, e]));
     },
 

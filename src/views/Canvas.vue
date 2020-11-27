@@ -11,6 +11,8 @@
     :use-css-transforms="true"
     :auto-size="false"
     :prevent-collision="true"
+    @layout-ready="layoutReadyEvent"
+    @layout-updated="layoutUpdatedEvent"
   >
     <grid-item v-for="(item, index) in layout"
       :x="item.x"
@@ -94,7 +96,7 @@ export default {
     resizedEvent(i, newH, newW, newHPx, newWPx) {
       this.$store.dispatch('updateChartData',
         {
-          choseId: this.choseId,
+          choseId: i,
           data: { h: newH, w: newW },
           pro: 'size',
         });
@@ -103,11 +105,56 @@ export default {
     movedEvent(i, x, y) {
       this.$store.dispatch('updateChartData',
         {
-          choseId: this.choseId,
+          choseId: i,
           data: { x, y },
           pro: 'size',
         });
       // console.log(`MOVED i=${i}, X=${x}, Y=${y}`);
+    },
+    layoutUpdatedEvent(newLayout) {
+      const layoutProps = this.layout;
+
+      if (layoutProps) {
+        newLayout.forEach((layout, index) => {
+          const {
+            w, h, x, y,
+          } = layoutProps[index].status.size;
+          if (w !== layout.w || h !== layout.h || x !== layout.x || y !== layout.y) {
+            this.$store.dispatch('updateChartData',
+              {
+                choseId: index,
+                data: {
+                  h: layout.h, w: layout.w, x: layout.x, y: layout.y,
+                },
+                pro: 'size',
+              });
+          }
+        // console.log(`h:${layout.h}, i:${layout.i}, w:${layout.w},x:${layout.x}, y:${layout.y}`);
+        });
+      }
+      // console.log('Updated layout: ', newLayout);
+    },
+
+    layoutReadyEvent(newLayout) {
+      const layoutProps = this.layout;
+      if (layoutProps) {
+        newLayout.forEach((layout, index) => {
+          const {
+            w, h, x, y,
+          } = layoutProps[index].status.size;
+          if (w !== layout.w || h !== layout.h || x !== layout.x || y !== layout.y) {
+            this.$store.dispatch('updateChartData',
+              {
+                choseId: index,
+                data: {
+                  h: layout.h, w: layout.w, x: layout.x, y: layout.y,
+                },
+                pro: 'size',
+              });
+          }
+        // console.log(`h:${layout.h}, i:${layout.i}, w:${layout.w},x:${layout.x}, y:${layout.y}`);
+        });
+      }
     },
   },
 };

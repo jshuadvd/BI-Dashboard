@@ -4,9 +4,9 @@
     <svg  height='100%' :viewBox="`0 0 ${width} ${height}`">
       <defs>
         <linearGradient id="gradient" x1="0" x2="0" y1="100%" y2="0%">
-          <stop offset="0%" stop-color="#73cdbb" />
+          <stop offset="0%" stop-color="#2dff9d" />
           <stop offset="50%" stop-color="#eee" />
-          <stop offset="100%" stop-color="#eb745f" />
+          <stop offset="100%" stop-color="#ff492d" />
         </linearGradient>
       </defs>
       <text x="5" y="50%">{{year}}</text>
@@ -16,7 +16,7 @@
           <text>{{colorSchema && colorSchema.domain()[0].toFixed(2)}}</text>
           <rect x="10" y="12" class="legend"
             width="5" :height="height/2" />
-          <text y="75%">{{colorSchema && colorSchema.domain()[1].toFixed(2)}}</text>
+          <text y="75%">{{colorSchema && colorSchema.domain()[2].toFixed(2)}}</text>
         </g>
       <g :transform="`translate(${marginLeft}, ${marginTop})`">
         <!-- <text v-for="(day,index) in daysLabel" :key="index"

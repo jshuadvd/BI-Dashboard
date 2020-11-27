@@ -16,7 +16,7 @@
           </div>
 
           <div>
-            {{items[+itemSelect].title}}
+            {{items[itemSelect].title}}
         </div>
       </div>
     </div>
@@ -31,6 +31,7 @@
         :width="600"
         :height="100"
         :left="50"
+        :right="50"
         :year="key"
         :colorScaleAcc="colorScaleAcc"
         :colorSchema="colorSchema"
@@ -45,6 +46,7 @@ import YEAR_HASH from '@/utils/yearHash';
 import * as d3 from 'd3';
 import { fetchFeeTimeSeries } from '@/site/util/http';
 import { mapState } from 'vuex';
+import { TITLE_HASH, SUBTITLE_HASH } from '@/utils/param';
 import CalendarVue from '../../calendar/Calendar.vue';
 
 export default {
@@ -75,20 +77,6 @@ export default {
 
   components: {
     Calendar: CalendarVue,
-  },
-
-  mounted() {
-    // if (!this.$store.feeTimeSeries) {
-    //   this.$store.dispatch('getFeeTimeSeries', {
-    //     fundType: 'public',
-    //     feeType: 'total',
-    //     granularity: this.items[this.itemSelect].key,
-    //     startDay: this.startDay,
-    //     endDay: this.endDay,
-    //   }).then(() => {
-    //     this.loading = false;
-    //   });
-    // }
   },
 
   computed: {
@@ -160,7 +148,7 @@ export default {
         });
       });
 
-      const e = Math.abs(Math.abs(minV), Math.abs(maxV));
+      const e = Math.max(Math.abs(minV), Math.abs(maxV));
 
       return d3.scaleLinear()
         .range(['#73cdbb', '#fff', '#eb745f'])
@@ -170,10 +158,16 @@ export default {
 
   watch: {
     itemSelect(value) {
-      this.getLoad({ granularity: this.items[value].key, endDay: this.endDay });
+      this.getLoad(this.items[value].key);
     },
     endDay(value) {
-      this.getLoad({ granularity: this.items[this.itemSelect].key, endDay: value });
+      this.getLoad(undefined, value);
+    },
+    chartTitle(value) {
+      this.getLoad(undefined, undefined, value);
+    },
+    subTitle(value) {
+      this.getLoad(undefined, undefined, undefined, value);
     },
 
     status: {
@@ -191,13 +185,18 @@ export default {
   },
 
   methods: {
-    getLoad({ granularity, endDay }) {
+    getLoad(
+      granularity = this.items[this.itemSelect].key,
+      endDay = this.endDay,
+      fundType = this.chartTitle,
+      feeType = this.subTitle,
+    ) {
       if (endDay) {
         this.loading = true;
 
         fetchFeeTimeSeries({
-          fundType: 'public',
-          feeType: 'total',
+          fundType: TITLE_HASH[fundType],
+          feeType: SUBTITLE_HASH[feeType],
           granularity,
           startDay: this.startDay,
           endDay,

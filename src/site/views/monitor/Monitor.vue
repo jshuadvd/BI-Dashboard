@@ -321,27 +321,54 @@ export default {
       this.loading = false;
     },
 
-    storeLinechart() {
-      // const status = {
-      //   data: {
-      //     chartTitle: this.menuTitle,
-      //     subTitle: this.menuSubtitle[this.tabActive],
-      //     startDay: this.dateStart,
-      //     endDay: this.dateEnd,
-      //     itemSelect: this.itemSelect,
-      //   },
-      //   size: { w: 6, h: 12 },
-      // };
+    storeLinechart(index) {
+      const data = new Chart('linechart', {
+        // data: {
+        //   chartTitle: this.menuTitle,
+        //   subTitle: this.menuSubtitle[this.tabActive],
+        //   startDay: this.dateStart,
+        //   endDay: this.dateEnd,
+        //   itemSelect: this.itemSelect,
+        // },
+        data: this.datafetch[index],
+        size: { w: 6, h: 13 },
+        props: [
+          [{ propsKey: 'value', compProps: 'chartTitle' }],
+          [{ propsKey: 'value', compProps: 'subTitle' }],
+          ['dateStart', 'dateEnd'],
+          [{ propsKey: 'value', compProps: 'itemSelect' }],
+        ],
+      }, [
+        new Status(SELECT, {
+          items: [
+            '公立医院',
+            '社区卫生服务中心',
+            '民营医院',
+            '其他社会办医',
+            '零售药店',
+          ],
+          value: this.menuTitle,
+        }),
 
-      // const data = new Chart('linechart', status, [
-      //   new Status(SELECT, {
-      //     items: this.items,
-      //     'item-text': 'title',
-      //     'item-value': 'value',
-      //   }, this.itemSelect),
-      // ]);
+        new Status(SELECT, {
+          items: this.menuSubtitle,
+          value: this.menuSubtitle[this.tabActive],
+        }),
 
-      // this.$store.dispatch('addChart', data);
+        new Status(DATE, {
+          dateStart: this.dateStart,
+          dateEnd: this.dateEnd,
+        }),
+
+        new Status(SELECT, {
+          items: this.items,
+          'item-text': 'title',
+          'item-value': 'value',
+          value: this.itemSelect,
+        }),
+      ]);
+
+      this.$store.dispatch('addChart', data);
     },
 
     storeCalendar(index) {
