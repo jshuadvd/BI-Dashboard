@@ -167,6 +167,7 @@ export default {
         data: {
           content: '',
         },
+        size: { w: 6, h: 4 },
       };
       const data = new Chart('richtext', status, null);
       this.$store.dispatch('addChart', data);
