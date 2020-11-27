@@ -116,19 +116,22 @@ export default {
 
       if (layoutProps) {
         newLayout.forEach((layout, index) => {
-          const {
-            w, h, x, y,
-          } = layoutProps[index].status.size;
-          if (w !== layout.w || h !== layout.h || x !== layout.x || y !== layout.y) {
-            this.$store.dispatch('updateChartData',
-              {
-                choseId: index,
-                data: {
-                  h: layout.h, w: layout.w, x: layout.x, y: layout.y,
-                },
-                pro: 'size',
-              });
+          if (layoutProps[index].status && layoutProps[index].status.size) {
+            const {
+              w, h, x, y,
+            } = layoutProps[index].status.size;
+            if (w !== layout.w || h !== layout.h || x !== layout.x || y !== layout.y) {
+              this.$store.dispatch('updateChartData',
+                {
+                  choseId: index,
+                  data: {
+                    h: layout.h, w: layout.w, x: layout.x, y: layout.y,
+                  },
+                  pro: 'size',
+                });
+            }
           }
+
         // console.log(`h:${layout.h}, i:${layout.i}, w:${layout.w},x:${layout.x}, y:${layout.y}`);
         });
       }
@@ -139,19 +142,22 @@ export default {
       const layoutProps = this.layout;
       if (layoutProps) {
         newLayout.forEach((layout, index) => {
-          const {
-            w, h, x, y,
-          } = layoutProps[index].status.size;
-          if (w !== layout.w || h !== layout.h || x !== layout.x || y !== layout.y) {
-            this.$store.dispatch('updateChartData',
-              {
-                choseId: index,
-                data: {
-                  h: layout.h, w: layout.w, x: layout.x, y: layout.y,
-                },
-                pro: 'size',
-              });
+          if (layoutProps[index].status && layoutProps[index].status.size) {
+            const {
+              w, h, x, y,
+            } = layoutProps[index].status.size;
+            if (w !== layout.w || h !== layout.h || x !== layout.x || y !== layout.y) {
+              this.$store.dispatch('updateChartData',
+                {
+                  choseId: index,
+                  data: {
+                    h: layout.h, w: layout.w, x: layout.x, y: layout.y,
+                  },
+                  pro: 'size',
+                });
+            }
           }
+
         // console.log(`h:${layout.h}, i:${layout.i}, w:${layout.w},x:${layout.x}, y:${layout.y}`);
         });
       }

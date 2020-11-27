@@ -94,5 +94,6 @@ export default {
 }
 .ql-bubble .ql-tooltip {
     border-radius: 5px;
+    z-index: 1;
 }
 </style>
