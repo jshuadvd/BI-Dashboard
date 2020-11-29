@@ -28,7 +28,8 @@
             编辑
           </v-btn>
 
-          <v-btn text medium outlined>
+          <v-btn text medium outlined
+          @click="preView">
             预览
           </v-btn>
         </v-btn-toggle>
@@ -49,12 +50,12 @@
       </div>
     </v-toolbar>
 
-    <div class="bi-canvas">
+    <div class="bi-canvas" >
       <!-- main -->
       <RichTextVue
       class="header">
       </RichTextVue>
-      <Canvas :layout="layout" @del-item="delItem" />
+      <Canvas  id='print' :layout="layout" @del-item="delItem" />
     </div>
   </v-sheet>
 </template>
@@ -86,6 +87,7 @@ export default {
     header: '医保智能检测系统汇报',
     author: 'VAG',
     layout: [],
+    fullscreen: false,
   }),
 
   computed: {
@@ -183,6 +185,30 @@ export default {
         id: '1',
       });
       this.$store.commit('SET_TITLE', data.title);
+    },
+    preView() {
+      const element = document.getElementById('print');
+      if (this.fullscreen) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      } else if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullScreen) {
+        element.webkitRequestFullScreen();
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+      } else if (element.msRequestFullscreen) {
+        // IE11
+        element.msRequestFullscreen();
+      }
+      // this.fullscreen = !this.fullscreen;
     },
   },
 };
