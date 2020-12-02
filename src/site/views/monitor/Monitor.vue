@@ -332,6 +332,7 @@ export default {
         // },
         data: this.datafetch[index],
         size: { w: 6, h: 13 },
+        backid: -1,
         props: [
           [{ propsKey: 'value', compProps: 'chartTitle' }],
           [{ propsKey: 'value', compProps: 'subTitle' }],
@@ -374,6 +375,7 @@ export default {
     storeCalendar(index) {
       const data = new Chart('calendar', {
       //  status
+        backid: -1,
         size: { w: 6, h: 9 },
         data: this.datafetch[index],
         state: {

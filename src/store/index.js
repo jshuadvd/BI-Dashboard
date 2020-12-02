@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { updateDashboardTitle } from '@/utils/api';
+import { updateDashboard } from '@/utils/api';
 import { fetchFeeTimeSeries } from '../utils/http';
 
 Vue.use(Vuex);
@@ -38,7 +38,9 @@ export default new Vuex.Store({
     },
 
     ADD_CHART(state, chart) {
+      console.log('add chart', chart);
       state.charts = [...state.charts, chart];
+      console.log(state.charts);
     },
 
     updatemenu(state, payload) {
@@ -70,6 +72,11 @@ export default new Vuex.Store({
       chart.updateData(pro, data);
       Vue.set(state.charts, choseId, chart);
     },
+    changeTextContent(state, payload) {
+      const { choseId, data } = payload;
+      state.charts[choseId].status.data = data;
+      // console.log(state.charts[choseId]);
+    },
   },
   actions: {
     getFeeTimeSeries({ commit }, param) {
@@ -79,10 +86,7 @@ export default new Vuex.Store({
     },
     updateTitle({ commit }, newTitle) {
       commit('SET_TITLE', newTitle);
-      updateDashboardTitle({ id: '1', title: newTitle }).then((res) => {
-      });
     },
-
     updateId({ commit }, id) {
       commit('SET_ID', id);
     },
@@ -101,6 +105,9 @@ export default new Vuex.Store({
 
     updateChartData({ commit }, payload) {
       commit('changeChartData', payload);
+    },
+    updateTextContent({ commit }, payload) {
+      commit('changeTextContent', payload);
     },
   },
   modules: {

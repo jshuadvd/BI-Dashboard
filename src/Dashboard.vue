@@ -1,7 +1,9 @@
 <template>
   <v-sheet :class="['bi-main', drawer?'hide-drawer':'']">
     <div class="bi-sidenav">
-      <sidenav @add-item="addItem" @add-rich-text="addRichText"/>
+      <sidenav
+      @add-rich-text="addRichText"
+      @add-title-text="addTitleText"/>
     </div>
 
     <v-toolbar class="bi-app-bar" dense>
@@ -35,7 +37,8 @@
         </v-btn-toggle>
 
         <div class="bi-btn">
-          <v-btn text medium outlined>
+          <v-btn text medium outlined
+          @click="saveDashboard">
             保存
           </v-btn>
         </div>
@@ -52,9 +55,10 @@
 
     <div class="bi-canvas" >
       <!-- main -->
-      <RichTextVue
+      <!-- <RichTextVue
+      :status="header"
       class="header">
-      </RichTextVue>
+      </RichTextVue> -->
       <Canvas  id='print' :layout="layout" @del-item="delItem" />
     </div>
   </v-sheet>
@@ -63,7 +67,7 @@
 <script>
 import Chart from '@/config/Chart';
 import { mapState } from 'vuex';
-import { fetchDashboardTitle } from '@/utils/api';
+import { fetchDashboardTitle, updateDashboard, getDashboardComponents } from '@/utils/api';
 import Canvas from './views/Canvas.vue';
 import Sidenav from './views/Sidenav.vue';
 import RichTextVue from './components/richtext/RichText.vue';
@@ -74,7 +78,7 @@ export default {
   components: {
     Canvas,
     Sidenav,
-    RichTextVue,
+    // RichTextVue,
   },
 
   data: () => ({
@@ -84,7 +88,7 @@ export default {
     edited: false,
     // 编辑还是保存
     dashStatus: 0,
-    header: '医保智能检测系统汇报',
+    header: '<h1><strong class="ql-size-large">医保智能监测系统</strong></h1>',
     author: 'VAG',
     layout: [],
     fullscreen: false,
@@ -105,7 +109,9 @@ export default {
       },
     },
   },
-
+  // destroyed() {
+  //   console.log('destroyed.');
+  // },
   watch: {
     charts: {
       handler(value) {
@@ -114,62 +120,52 @@ export default {
       deep: true,
     },
   },
-
   mounted() {
     this.getDashboardTitle();
     this.mapChart(this.charts);
+    this.getDashboardComponents();
+    console.log('mounted');
   },
 
   methods: {
     mapChart(value) {
-      this.layout = value.map((chart, index) => {
-        console.log(chart.props);
-
-        // let x = 0, y = 0;
-        // if (index > 0 && chart.status.size.x === undefined) {
-        //   const lastChart = value[index - 1];
-        //   if (lastChart.status.size.x + lastChart.status.size.w + chart.status.size.w <= 12) {
-        //     x = lastChart.status.size.x + lastChart.status.size.w;
-        //   } else {
-        //     y = lastChart.status.size.y + lastChart.status.size.h;
-        //   }
-        // }
-        return ({
-          x: chart.status.size.x || 0,
-          y: chart.status.size.y || 0,
-          w: chart.status.size.w || 6,
-          h: chart.status.size.h || 12,
-          i: chart.id,
-          drag: true,
-          type: chart.type,
-          setting: chart.setting,
-          status: {
-            data: chart.status.data,
-            ...chart.status.state,
-            ...chart.props,
-          },
-        });
-      });
-    },
-    addItem() {
-      this.layout.push({
-        x: (this.layout.length * 2) % (this.colNum || 12),
-        y: this.layout.length + (this.colNum || 12),
-        w: 2,
-        h: 2,
-        i: this.index,
+      this.layout = value.map((chart) => ({
+        x: chart.status.size.x || 0,
+        y: chart.status.size.y || 0,
+        w: chart.status.size.w || 6,
+        h: chart.status.size.h || 12,
+        backid: chart.backid,
+        i: chart.id,
         drag: true,
-        status: {},
-        setting: {},
-      });
-      this.index += 1;
+        type: chart.type,
+        setting: chart.setting,
+        status: {
+          data: chart.status.data,
+          ...chart.status.state,
+          ...chart.props,
+        },
+      }));
+    },
+    addTitleText() {
+      const status = {
+        data: {
+          content: '<h1><strong class="ql-size-large">医保智能监测系统</strong></h1>',
+          isTitle: true,
+        },
+        size: { w: 12, h: 4 },
+        backid: -1,
+      };
+      const data = new Chart('richtext', status, null);
+      this.$store.dispatch('addChart', data);
     },
     addRichText() {
       const status = {
         data: {
-          content: '',
+          content: '<h1><strong class="ql-size-large">测试文本测试文本测试文本测试文本</strong></h1>',
+          isTitle: false,
         },
-        size: { w: 6, h: 4 },
+        size: { w: 12, h: 3 },
+        backid: -1,
       };
       const data = new Chart('richtext', status, null);
       this.$store.dispatch('addChart', data);
@@ -182,9 +178,60 @@ export default {
     },
     async getDashboardTitle() {
       const data = await fetchDashboardTitle({
-        id: '1',
+        id: 3,
       });
       this.$store.commit('SET_TITLE', data.title);
+    },
+    async getDashboardComponents() {
+      const data = await getDashboardComponents({
+        id: 3,
+      });
+      console.log('getdashboard');
+      data.settings.forEach((value) => {
+        const comp = {};
+        comp.x = value.x;
+        comp.y = value.y;
+        comp.w = value.w;
+        comp.h = value.h;
+        comp.status = value.config.status;
+        comp.setting = value.config.setting;
+        comp.type = value.config.type;
+        // console.log('comp', comp);
+        // console.log('value', value);
+        const status = {
+          ...comp.status,
+          size: {
+            w: comp.w, h: comp.h, x: comp.x, y: comp.y,
+          },
+          backid: value.id,
+        };
+        const chart = new Chart(comp.type, status, comp.setting);
+        this.$store.dispatch('addChart', chart);
+      });
+    },
+    async saveDashboard() {
+      const settings = [];
+      this.layout.forEach((value) => {
+        const comp = {};
+        comp.id = value.backid;
+        comp.x = value.x;
+        comp.y = value.y;
+        comp.w = value.w;
+        comp.h = value.h;
+        comp.config = {
+          status: value.status,
+          setting: value.setting,
+          type: value.type,
+        };
+        settings.push(comp);
+      });
+      const data = await updateDashboard({
+        id: 3,
+        title: this.title,
+        settings,
+        del: [],
+      });
+      console.log(data);
     },
     preView() {
       const element = document.getElementById('print');

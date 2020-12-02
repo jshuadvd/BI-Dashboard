@@ -113,6 +113,7 @@ export default {
     },
     layoutUpdatedEvent(newLayout) {
       const layoutProps = this.layout;
+      console.log(newLayout);
 
       if (layoutProps) {
         newLayout.forEach((layout, index) => {
@@ -131,8 +132,6 @@ export default {
                 });
             }
           }
-
-        // console.log(`h:${layout.h}, i:${layout.i}, w:${layout.w},x:${layout.x}, y:${layout.y}`);
         });
       }
       // console.log('Updated layout: ', newLayout);
