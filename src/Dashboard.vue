@@ -96,7 +96,7 @@ export default {
     titleMap: {
       set(value) {
         this.$store.dispatch('updateTitle', value);
-        console.log(this.title);
+        // console.log(this.title);
       },
       get() {
         return this.title;
@@ -121,7 +121,7 @@ export default {
   methods: {
     mapChart(value) {
       this.layout = value.map((chart, index) => {
-        console.log(chart.props);
+        console.log('chartSize', index, chart.status.size);
 
         // let x = 0, y = 0;
         // if (index > 0 && chart.status.size.x === undefined) {

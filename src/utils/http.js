@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const prefix = '/api/';
+// const prefix = '/api/';
+const prefix = '/real/';
 
 function fire(method, URL, data) {
   if (method === 'POST') {

@@ -38,7 +38,7 @@ const Chart = (() => {
     }
 
     updateData(pro, data) {
-      this.status = { ...this.status, ...{ [pro]: data } };
+      this.status = { ...this.status, ...{ [pro]: { ...this.status[pro], ...data } } };
     }
   }
   return ChartClass;
