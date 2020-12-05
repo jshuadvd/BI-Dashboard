@@ -70,7 +70,6 @@ import { fetchDashboardTitle, updateDashboard, getDashboardComponents } from '@/
 import Chart from '@/config/Chart';
 import Canvas from './views/Canvas.vue';
 import Sidenav from './views/Sidenav.vue';
-import RichTextVue from './components/richtext/RichText.vue';
 
 export default {
   name: 'App',
@@ -92,6 +91,7 @@ export default {
     author: 'VAG',
     layout: [],
     fullscreen: false,
+    del: [],
   }),
 
   computed: {
@@ -165,7 +165,7 @@ export default {
     addTitleText() {
       const status = {
         data: {
-          content: '<h1><strong class="ql-size-large">医保智能监测系统</strong></h1>',
+          content: '<h1 class="ql-align-center"><strong class="ql-size-large">医保智能监测系统</strong></h1>',
           isTitle: true,
         },
         size: { w: 12, h: 4 },
@@ -177,16 +177,21 @@ export default {
     addRichText() {
       const status = {
         data: {
-          content: '<h1><strong class="ql-size-large">测试文本测试文本测试文本测试文本</strong></h1>',
+          content: '<h1>测试文本测试文本测试文本测试文本</h1>',
           isTitle: false,
         },
-        size: { w: 12, h: 3 },
+        size: { w: 6, h: 4 },
         backid: -1,
       };
       const data = new Chart('richtext', status, null);
       this.$store.dispatch('addChart', data);
     },
     delItem(ind) {
+      for (let index = 0; index < this.layout.length; index++) {
+        if (this.layout[index].i === ind) {
+          this.del.push(this.layout[index].backid);
+        }
+      }
       this.$store.dispatch('deleteChart', ind);
     },
     editTodo(todo) {
@@ -202,7 +207,6 @@ export default {
       const data = await getDashboardComponents({
         id: 3,
       });
-      console.log('getdashboard');
       data.settings.forEach((value) => {
         const comp = {};
         comp.x = value.x;
@@ -212,8 +216,6 @@ export default {
         comp.status = value.config.status;
         comp.setting = value.config.setting;
         comp.type = value.config.type;
-        // console.log('comp', comp);
-        // console.log('value', value);
         const status = {
           ...comp.status,
           size: {
@@ -245,9 +247,8 @@ export default {
         id: 3,
         title: this.title,
         settings,
-        del: [],
+        del: this.del,
       });
-      console.log(data);
     },
     preView() {
       const element = document.getElementById('print');
