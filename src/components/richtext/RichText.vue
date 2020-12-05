@@ -2,7 +2,6 @@
   <quill-editor
     class="bi-ql-editor"
     v-model="content"
-    :content="content"
     :options="editorOption"
     @blur="onEditorBlur($event)"
     @focus="onEditorFocus($event)"
@@ -16,6 +15,7 @@ import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
+import { mapState } from 'vuex';
 
 const toolbarOptions = [
   // 加粗、倾斜、下划线、删除线
@@ -45,7 +45,7 @@ const toolbarOptions = [
 ];
 export default {
   props: {
-    title: String,
+    status: Object,
   },
   components: {
     quillEditor,
@@ -53,6 +53,8 @@ export default {
   data() {
     return {
       name: 'register-modules-example',
+      // content: '<h1><strong class="ql-size-large">医保智能检测系统汇报</strong></h1>',
+      isTitle: false,
       content: '<h1><strong class="ql-size-large">医保智能检测系统汇报</strong></h1>',
       editorOption: {
         scrollingContainer: '#editorcontainer',
@@ -70,6 +72,21 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      choseId: (state) => state.choseId,
+    }),
+  },
+  watch: {
+    status: {
+      handler(newValue) {
+        this.content = newValue.data.content;
+        this.isTitle = newValue.data.isTitle;
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   methods: {
     onEditorBlur(editor) {
       this.$emit('fixed-text', true);
@@ -79,7 +96,11 @@ export default {
     },
     // 内容改变事件
     onEditorChange() {
-      console.log(this.content);
+      const data = {
+        content: this.content,
+        isTitle: this.isTitle,
+      };
+      this.$store.dispatch('updateTextContent', { choseId: this.choseId, data });
     },
     // 准备编辑器
     onEditorReady(editor) {

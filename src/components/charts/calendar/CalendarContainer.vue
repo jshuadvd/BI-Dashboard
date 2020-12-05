@@ -172,12 +172,7 @@ export default {
 
     status: {
       handler(newValue) {
-        this.itemSelectMap = newValue.itemSelect;
-        this.startDayMap = newValue.dateStart;
-        this.endDayMap = newValue.dateEnd;
-        this.typeMap = newValue.type;
-        this.subTitle = newValue.subTitle;
-        this.chartTitle = newValue.chartTitle;
+        this.initDataFromStatus(newValue);
       },
       deep: true,
       immediate: true,
@@ -185,6 +180,14 @@ export default {
   },
 
   methods: {
+    initDataFromStatus(newValue) {
+      this.itemSelectMap = newValue.itemSelect;
+      this.startDayMap = newValue.dateStart;
+      this.endDayMap = newValue.dateEnd;
+      this.typeMap = newValue.type;
+      this.subTitle = newValue.subTitle;
+      this.chartTitle = newValue.chartTitle;
+    },
     getLoad(
       granularity = this.items[this.itemSelect].key,
       endDay = this.endDay,

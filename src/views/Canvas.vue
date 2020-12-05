@@ -131,11 +131,9 @@ export default {
                 });
             }
           }
-
-          console.log(`h:${layout.h}, i:${layout.i}, w:${layout.w},x:${layout.x}, y:${layout.y}`);
         });
       }
-      console.log('Updated layout: ', newLayout);
+      // console.log('Updated layout: ', newLayout);
     },
 
     layoutReadyEvent(newLayout) {

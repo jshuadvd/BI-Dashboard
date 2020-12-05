@@ -7,6 +7,7 @@ const Chart = (() => {
       this.type = type;
       // 复现组件状态的data，对象
       this.status = status;
+      this.backid = status.backid;
       this.id = id;
       id += 1;
       this.setting = setting;

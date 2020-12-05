@@ -73,7 +73,7 @@ export default {
       accessorX: (d, i) => new Date(d[0]),
       xDomain: [new Date(Date.UTC(2020, 0, 0)), new Date(Date.UTC(2020, 11, 31))],
 
-      loading: true,
+      loading: false,
 
       itemSelect: 0,
       startDay: '',
@@ -165,6 +165,7 @@ export default {
           this.$store.dispatch('updateChartData', { choseId: this.choseId, data: res, pro: 'data' });
         }).catch((err) => {
           this.loading = false;
+          window.console.error(err);
         });
       }
     },

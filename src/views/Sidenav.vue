@@ -67,8 +67,15 @@
       <v-btn
         dense
         block
+        @click="addTitleText">
+        添加标题
+      </v-btn>
+      <br>
+      <v-btn
+        dense
+        block
         @click="addRichText">
-        添加文本框
+        添加富本框
       </v-btn>
     </div>
   </div>
@@ -128,6 +135,9 @@ export default {
     addRichText() {
       this.$emit('add-rich-text');
     },
+    addTitleText() {
+      this.$emit('add-title-text');
+    },
   },
 };
 </script>
@@ -163,7 +173,7 @@ export default {
     }
 
     .footer {
-      height: 6vh;
+      height: 15vh;
     }
   }
 </style>
