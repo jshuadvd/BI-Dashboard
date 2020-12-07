@@ -1,9 +1,12 @@
 <template>
-  <v-sheet :class="['bi-main', drawer?'hide-drawer':'']">
+  <v-sheet :class="['bi-main', drawer?'hide-drawer':'']"
+    v-click-outside="toggleClick"
+  >
     <div class="bi-sidenav">
       <sidenav
-      @add-rich-text="addRichText"
-      @add-title-text="addTitleText"/>
+        @add-rich-text="addRichText"
+        @add-title-text="addTitleText"
+      />
     </div>
 
     <v-toolbar class="bi-app-bar" dense>
@@ -17,7 +20,7 @@
           @keyup.enter = "edited=false; $emit('update')"
         />
         <div v-else>
-          <label @click = "edited = true;"> {{title}} </label>
+          <label @click = "edited = true;"> {{titleMap}} </label>
         </div>
       </v-toolbar-title>
       <div>
@@ -52,13 +55,7 @@
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       </div>
     </v-toolbar>
-
-    <div class="bi-canvas" >
-      <!-- main -->
-      <!-- <RichTextVue
-      :status="header"
-      class="header">
-      </RichTextVue> -->
+    <div class="bi-canvas">
       <Canvas  id='print' :layout="layout" @del-item="delItem" />
     </div>
   </v-sheet>
@@ -68,6 +65,7 @@
 import { mapState } from 'vuex';
 import { fetchDashboardTitle, updateDashboard, getDashboardComponents } from '@/utils/api';
 import Chart from '@/config/Chart';
+import ClickOutside from 'vue-click-outside';
 import Canvas from './views/Canvas.vue';
 import Sidenav from './views/Sidenav.vue';
 import RichTextVue from './components/richtext/RichText.vue';
@@ -97,15 +95,17 @@ export default {
   computed: {
     ...mapState({
       charts: (state) => state.charts,
-      title: (state) => state.title,
+      titles: (state) => state.titles,
     }),
     titleMap: {
       set(value) {
-        this.$store.dispatch('updateTitle', value);
+        this.$store.dispatch('updateTitle', { title: value, index: 0 });
         // console.log(this.title);
       },
       get() {
-        return this.title;
+        console.log(this.titles[0]);
+        // TODO 默认现在为0
+        return this.titles[0];
       },
     },
   },
@@ -124,10 +124,21 @@ export default {
     this.getDashboardTitle();
     this.mapChart(this.charts);
     this.getDashboardComponents();
-    console.log('mounted');
+    // console.log('mounted');
+    this.popupItem = this.$el;
+  },
+
+  directives: {
+    ClickOutside,
   },
 
   methods: {
+    toggleClick() {
+      this.$store.dispatch('updateId', -1);
+    },
+    cancelChoose() {
+      this.$store.dispatch('updateId', -1);
+    },
     mapChart(value) {
       this.layout = value.map((chart) => {
         if (chart.backid !== -1) {
@@ -334,7 +345,8 @@ export default {
 
   .bi-main {
     position: relative;
-    height: 90vh;
+    height: 100%;
+    background: #fff;
 
     .bi-sidenav {
       position: absolute;
@@ -342,7 +354,6 @@ export default {
       bottom: 0;
       top: 48px;
       width: 275px;
-      background: #fff;
       transform: translate3d(0px, 0px, 0px);
       transition: transform .3s ease-in-out;
       box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
