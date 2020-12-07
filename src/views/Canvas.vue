@@ -25,7 +25,7 @@
       @resized="resizedEvent"
       @moved="movedEvent"
     >
-      <div class="item-wrapper" @click="clickItem(index)">
+      <div :class="`item-wrapper ${choseId===index?'active':''}`" @click="clickItem(index)">
         <component
           :is="hashComponents[item.type]"
           :status="item.status"
@@ -78,6 +78,7 @@ export default {
       this.$emit('del-item', ind);
     },
     clickItem(index) {
+      // console.log('clickItem');
       this.$store.dispatch('updateId', index);
     },
     // f 是否固定文本框
@@ -233,6 +234,10 @@ export default {
   .item-wrapper {
     width: 100%;
     height: 100%;
+  }
+
+  .active {
+    border: 1px solid #2f77d3;
   }
 }
 </style>

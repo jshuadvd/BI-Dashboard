@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { updateDashboard } from '@/utils/api';
+import { fetchDashboardTitle } from '@/utils/api';
 import { fetchFeeTimeSeries } from '../utils/http';
 
 Vue.use(Vuex);
@@ -10,7 +10,6 @@ export default new Vuex.Store({
     // wei_gui_lie_zhi_fei_yong
     // wei_gui_ren_shu: 0,
     // wei_gui_ji_gou_shu: 0,
-    title: '',
     menudata: [0, 0, 0],
 
     // 表格的数据
@@ -20,13 +19,15 @@ export default new Vuex.Store({
     },
     feeTimeSeries: null,
     // 当前选中的组件
-    choseId: 0,
+    choseId: -1,
     // 当前存储的组件状态
     charts: [],
+    // 报表的标题数组
+    titles: [],
   },
   mutations: {
-    SET_TITLE(state, newTitle) {
-      state.title = newTitle;
+    SET_TITLE(state, { title, index }) {
+      Vue.set(state.titles, index, title);
     },
 
     SET_FEE_TIME_SERIES(state, data) {
@@ -38,9 +39,13 @@ export default new Vuex.Store({
     },
 
     ADD_CHART(state, chart) {
-      console.log('add chart', chart);
+      // console.log('add chart', chart);
       state.charts = [...state.charts, chart];
-      console.log(state.charts);
+      // console.log(state.charts);
+    },
+
+    SET_BOARD_TITLE(state, titles) {
+      state.titles = [...titles];
     },
 
     updatemenu(state, payload) {
@@ -84,8 +89,8 @@ export default new Vuex.Store({
         commit('SET_FEE_TIME_SERIES', res);
       });
     },
-    updateTitle({ commit }, newTitle) {
-      commit('SET_TITLE', newTitle);
+    updateTitle({ commit }, payload) {
+      commit('SET_TITLE', payload);
     },
     updateId({ commit }, id) {
       commit('SET_ID', id);
@@ -108,6 +113,17 @@ export default new Vuex.Store({
     },
     updateTextContent({ commit }, payload) {
       commit('changeTextContent', payload);
+    },
+    getDashboardTitle({ commit }, id) {
+      fetchDashboardTitle({
+        id,
+      }).then((res) => {
+        if (typeof res.title === 'string') {
+          commit('SET_BOARD_TITLE', [res.title]);
+        } else {
+          commit('SET_BOARD_TITLE', res.title);
+        }
+      });
     },
   },
   modules: {
