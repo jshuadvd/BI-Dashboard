@@ -68,7 +68,6 @@ import Chart from '@/config/Chart';
 import ClickOutside from 'vue-click-outside';
 import Canvas from './views/Canvas.vue';
 import Sidenav from './views/Sidenav.vue';
-import RichTextVue from './components/richtext/RichText.vue';
 
 export default {
   name: 'App',
