@@ -94,6 +94,7 @@ export default {
       }
     },
     onEditorFocus(editor) {
+      console.log('focus');
       this.$emit('fixed-text', false);
     },
     // 内容改变事件
@@ -103,7 +104,7 @@ export default {
         isTitle: this.isTitle,
       };
       this.$store.dispatch('updateTextContent', { choseId: this.choseId, data });
-      // console.log(this.content);
+      console.log('onEditorChange');
     },
     // 准备编辑器
     onEditorReady(editor) {

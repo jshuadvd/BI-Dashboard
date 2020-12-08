@@ -58,7 +58,9 @@ export default new Vuex.Store({
     },
 
     deleteChart(state, id) {
+      // console.log(state, id);
       state.charts = state.charts.filter((chart, index) => index !== id);
+      state.choseId = -1;
     },
 
     changeChartProperty(state, payload) {
@@ -79,7 +81,15 @@ export default new Vuex.Store({
     },
     changeTextContent(state, payload) {
       const { choseId, data } = payload;
-      state.charts[choseId].status.data = data;
+
+      // console.log(state.choseId, choseId);
+
+      if (choseId > 0) {
+        state.charts[choseId].status.data = data;
+      }
+      // const chart = state.charts[choseId];
+      // chart.updateData(data, data);
+      // Vue.set(state.charts, choseId, chart);
       // console.log(state.charts[choseId]);
     },
   },

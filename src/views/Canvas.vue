@@ -26,7 +26,8 @@
       @resized="resizedEvent"
       @moved="movedEvent"
     >
-      <div :class="`item-wrapper ${choseId===index?'active':''}`" @click="clickItem(index)">
+      <div :class="`item-wrapper ${choseId===index?'active':''}`" @click="clickItem(item.i)"
+        :id="item.i" :index="index">
         <component
           :is="hashComponents[item.type]"
           :status="item.status"
@@ -37,7 +38,7 @@
           v-if="!item.isTitle"
           small depressed
           class="bi-btn"
-          @click="delItem(item.i)"
+          @click.stop="delItem(item.i)"
         >X</v-btn>
       </div>
     </grid-item>
@@ -80,7 +81,6 @@ export default {
       this.$emit('del-item', ind);
     },
     clickItem(index) {
-      // console.log('clickItem');
       this.$store.dispatch('updateId', index);
     },
     // f 是否固定文本框
@@ -117,6 +117,8 @@ export default {
     layoutUpdatedEvent(newLayout) {
       const layoutProps = this.layout;
 
+      // console.log('update', layoutProps);
+
       if (layoutProps) {
         newLayout.forEach((layout, index) => {
           if (layoutProps[index].status && layoutProps[index].status.size) {
@@ -126,7 +128,7 @@ export default {
             if (w !== layout.w || h !== layout.h || x !== layout.x || y !== layout.y) {
               this.$store.dispatch('updateChartData',
                 {
-                  choseId: index,
+                  choseId: layoutProps[index].i,
                   data: {
                     h: layout.h, w: layout.w, x: layout.x, y: layout.y,
                   },
@@ -134,12 +136,13 @@ export default {
                 });
             }
           }
+          // console.log(`i:${layout.i}, index:${index}`);
         });
       }
-      // console.log('Updated layout: ', newLayout);
     },
 
     layoutReadyEvent(newLayout) {
+      // console.log('ready');
       const layoutProps = this.layout;
       if (layoutProps) {
         newLayout.forEach((layout, index) => {
@@ -150,7 +153,7 @@ export default {
             if (w !== layout.w || h !== layout.h || x !== layout.x || y !== layout.y) {
               this.$store.dispatch('updateChartData',
                 {
-                  choseId: index,
+                  choseId: layoutProps[index].i,
                   data: {
                     h: layout.h, w: layout.w, x: layout.x, y: layout.y,
                   },
@@ -159,7 +162,7 @@ export default {
             }
           }
 
-        // console.log(`h:${layout.h}, i:${layout.i}, w:${layout.w},x:${layout.x}, y:${layout.y}`);
+          // console.log(`i:${layout.i}, index:${index}`);
         });
       }
     },

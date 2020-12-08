@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
-    <h1 v-if="choseId === -1">图表设计</h1>
-    <h1 v-else>报表设计</h1>
+    <h1 v-if="choseId === -1">报表设计</h1>
+    <h1 v-else>图表设计</h1>
     <v-divider />
 
     <div class="content" v-if="choseId !== -1">
@@ -74,7 +74,7 @@
           dense
           block
           @click="addTitleText">
-          添加标题
+          {{btnname}}
         </v-btn>
         <br>
         <v-btn

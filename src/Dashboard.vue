@@ -105,7 +105,6 @@ export default {
         // console.log(this.title);
       },
       get() {
-        console.log(this.titles[0]);
         // TODO 默认现在为0
         return this.titles[0];
       },
@@ -139,7 +138,10 @@ export default {
       this.$store.dispatch('updateId', -1);
     },
     mapChart(value) {
-      this.layout = value.map((chart) => {
+      // const yMax = Math.max(...value.map((chart) => chart.status.size.y));
+      // console.log(yMax);
+
+      this.layout = value.map((chart, index) => {
         if (chart.backid !== -1) {
           return {
             x: chart.status.size.x || 0,
@@ -148,7 +150,7 @@ export default {
             h: chart.status.size.h || 12,
             backid: chart.backid,
             isTitle: chart.isTitle,
-            i: chart.id,
+            i: index,
             drag: (chart.isTitle !== true),
             type: chart.type,
             setting: chart.setting,
@@ -162,7 +164,7 @@ export default {
           h: chart.status.size.h || 12,
           backid: chart.backid,
           isTitle: chart.isTitle,
-          i: chart.id,
+          i: index,
           drag: (chart.isTitle !== true),
           type: chart.type,
           setting: chart.setting,
@@ -210,7 +212,7 @@ export default {
         // console.log(this.charts);
         this.nameExist = false;
       }
-      console.log('add', this.nameExist);
+      // console.log('add', this.nameExist);
     },
     addRichText() {
       const status = {
@@ -234,6 +236,7 @@ export default {
           break;
         }
       }
+      console.log('deleteItem,dashboard', ind, this.layout[ind]);
       this.$store.dispatch('deleteChart', ind);
     },
     editTodo(todo) {
