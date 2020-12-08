@@ -1,9 +1,10 @@
 <template>
   <div class="layout">
-    <h1>图表设计</h1>
+    <h1 v-if="choseId === -1">图表设计</h1>
+    <h1 v-else>报表设计</h1>
     <v-divider />
 
-    <div class="content">
+    <div class="content" v-if="choseId !== -1">
       <!-- tabs -->
       <v-tabs
         v-model="tab"
@@ -32,7 +33,7 @@
                 v-on:change="handleChange($event, i, 'value')"
               ></component>
             </template>
-             <!-- v-model="content.model" -->
+            <!-- v-model="content.model" -->
 
           </template>
         </v-tab-item>
@@ -63,20 +64,22 @@
       </v-tabs-items>
     </div>
 
-    <div class="footer">
-      <v-btn
-        dense
-        block
-        @click="addTitleText">
-        {{btnname}}
-      </v-btn>
-      <br>
-      <v-btn
-        dense
-        block
-        @click="addRichText">
-        添加富本框
-      </v-btn>
+    <div v-if="choseId===-1" class="container">
+      <div class="footer">
+        <v-btn
+          dense
+          block
+          @click="addTitleText">
+          添加标题
+        </v-btn>
+        <br>
+        <v-btn
+          dense
+          block
+          @click="addRichText">
+          添加富文本框
+        </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -151,9 +154,9 @@ export default {
   .layout {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     padding: 10px 20px;
     height: 100%;
+    transition: all 300ms ease-in-out;
 
     h1 {
       font-size: 20px;
@@ -177,8 +180,14 @@ export default {
       }
     }
 
-    .footer {
-      height: 15vh;
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 100%;
+      .footer {
+        height: 15vh;
+      }
     }
   }
 </style>

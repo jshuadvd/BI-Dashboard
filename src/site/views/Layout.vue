@@ -188,6 +188,7 @@ import Icon3 from '@/site/assets/warning/3.svg';
 import BiIcon from '@/assets/logo.svg';
 
 import { ROUTE_PARAM, FUND_TYPE } from '@/site/util/type';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -235,7 +236,15 @@ export default {
     },
   },
 
+  mounted() {
+    // 默认id为3
+    this.$store.dispatch('getDashboardTitle', 3);
+  },
+
   computed: {
+    ...mapState({
+      titles: (state) => state.titles,
+    }),
     fundString() {
       return ROUTE_PARAM[this.routeType];
     },
@@ -348,9 +357,10 @@ export default {
         [
           {
             title: '自定义报表',
-            items: [
-              { title: '未命名报表', href: '/dashboard' },
-            ],
+            items: this.titles.map((title) => ({
+              title,
+              href: '/dashboard',
+            })),
             icon: icon5,
           },
           {

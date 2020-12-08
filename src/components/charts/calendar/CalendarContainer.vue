@@ -194,7 +194,7 @@ export default {
       fundType = this.chartTitle,
       feeType = this.subTitle,
     ) {
-      if (endDay) {
+      if (endDay && this.choseId !== -1) {
         this.loading = true;
 
         fetchFeeTimeSeries({
