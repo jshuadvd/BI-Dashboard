@@ -4,9 +4,9 @@
   >
     <div class="bi-sidenav">
       <sidenav
-        @add-rich-text="addRichText"
-        @add-title-text="addTitleText"
-      />
+      :nameExist="nameExist"
+      @add-rich-text="addRichText"
+      @add-title-text="addTitleText"/>
     </div>
 
     <v-toolbar class="bi-app-bar" dense>
@@ -68,7 +68,6 @@ import Chart from '@/config/Chart';
 import ClickOutside from 'vue-click-outside';
 import Canvas from './views/Canvas.vue';
 import Sidenav from './views/Sidenav.vue';
-import RichTextVue from './components/richtext/RichText.vue';
 
 export default {
   name: 'App',
@@ -86,12 +85,10 @@ export default {
     edited: false,
     // 编辑还是保存
     dashStatus: 0,
-    header: '<h1><strong class="ql-size-large">医保智能监测系统</strong></h1>',
-    author: 'VAG',
     layout: [],
-    fullscreen: false,
+    del: [],
+    nameExist: false,
   }),
-
   computed: {
     ...mapState({
       charts: (state) => state.charts,
@@ -103,15 +100,11 @@ export default {
         // console.log(this.title);
       },
       get() {
-        console.log(this.titles[0]);
         // TODO 默认现在为0
         return this.titles[0];
       },
     },
   },
-  // destroyed() {
-  //   console.log('destroyed.');
-  // },
   watch: {
     charts: {
       handler(value) {
@@ -140,7 +133,10 @@ export default {
       this.$store.dispatch('updateId', -1);
     },
     mapChart(value) {
-      this.layout = value.map((chart) => {
+      // const yMax = Math.max(...value.map((chart) => chart.status.size.y));
+      // console.log(yMax);
+
+      this.layout = value.map((chart, index) => {
         if (chart.backid !== -1) {
           return {
             x: chart.status.size.x || 0,
@@ -148,8 +144,9 @@ export default {
             w: chart.status.size.w || 6,
             h: chart.status.size.h || 12,
             backid: chart.backid,
-            i: chart.id,
-            drag: true,
+            isTitle: chart.isTitle,
+            i: index,
+            drag: (chart.isTitle !== true),
             type: chart.type,
             setting: chart.setting,
             status: chart.status,
@@ -161,8 +158,9 @@ export default {
           w: chart.status.size.w || 6,
           h: chart.status.size.h || 12,
           backid: chart.backid,
-          i: chart.id,
-          drag: true,
+          isTitle: chart.isTitle,
+          i: index,
+          drag: (chart.isTitle !== true),
           type: chart.type,
           setting: chart.setting,
           status: {
@@ -174,30 +172,66 @@ export default {
       });
     },
     addTitleText() {
-      const status = {
-        data: {
-          content: '<h1><strong class="ql-size-large">医保智能监测系统</strong></h1>',
-          isTitle: true,
-        },
-        size: { w: 12, h: 4 },
-        backid: -1,
-      };
-      const data = new Chart('richtext', status, null);
-      this.$store.dispatch('addChart', data);
+      if (this.nameExist !== true) {
+        this.layout.forEach((layout, index) => {
+          if (this.layout[index].status && this.layout[index].status.size) {
+            this.$store.dispatch('updateChartData',
+              {
+                choseId: index,
+                data: {
+                  h: layout.h, w: layout.w, x: layout.x, y: layout.y + 3,
+                },
+                pro: 'size',
+              });
+          }
+        });
+        const status = {
+          data: {
+            content: '<h1 class="ql-align-center"><strong class="ql-size-large">医保智能监测系统</strong></h1>',
+            isTitle: true,
+          },
+          size: {
+            w: 12, h: 3,
+          },
+          backid: -1,
+        };
+        const data = new Chart('richtext', status, null);
+        this.$store.dispatch('addChart', data);
+        this.nameExist = true;
+      } else {
+        let i;
+        for (i = 0; i < this.layout.length; i++) {
+          if (this.layout[i].isTitle === true) { break; }
+        }
+        this.delItem(i);
+        // console.log(this.charts);
+        this.nameExist = false;
+      }
+      // console.log('add', this.nameExist);
     },
     addRichText() {
       const status = {
         data: {
-          content: '<h1><strong class="ql-size-large">测试文本测试文本测试文本测试文本</strong></h1>',
+          content: '<h1>测试文本测试文本测试文本测试文本</h1>',
           isTitle: false,
         },
-        size: { w: 12, h: 3 },
+        size: {
+          x: 0, y: 0, w: 6, h: 4,
+        },
         backid: -1,
       };
       const data = new Chart('richtext', status, null);
       this.$store.dispatch('addChart', data);
     },
     delItem(ind) {
+      let index;
+      for (index = 0; index < this.layout.length; index++) {
+        if (this.layout[index].i === ind) {
+          this.del.push(this.layout[index].backid);
+          break;
+        }
+      }
+      console.log('deleteItem,dashboard', ind, this.layout[ind]);
       this.$store.dispatch('deleteChart', ind);
     },
     editTodo(todo) {
@@ -213,7 +247,6 @@ export default {
       const data = await getDashboardComponents({
         id: 3,
       });
-      console.log('getdashboard');
       data.settings.forEach((value) => {
         const comp = {};
         comp.x = value.x;
@@ -223,8 +256,6 @@ export default {
         comp.status = value.config.status;
         comp.setting = value.config.setting;
         comp.type = value.config.type;
-        // console.log('comp', comp);
-        // console.log('value', value);
         const status = {
           ...comp.status,
           size: {
@@ -232,9 +263,13 @@ export default {
           },
           backid: value.id,
         };
+        if (value.config.status.data && value.config.status.data.isTitle) {
+          this.nameExist = true;
+        }
         const chart = new Chart(comp.type, status, comp.setting);
         this.$store.dispatch('addChart', chart);
       });
+      console.log(this.nameExist);
     },
     async saveDashboard() {
       const settings = [];
@@ -256,33 +291,12 @@ export default {
         id: 3,
         title: this.title,
         settings,
-        del: [],
+        del: this.del,
       });
-      console.log(data);
     },
     preView() {
       const element = document.getElementById('print');
-      if (this.fullscreen) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      } else if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.webkitRequestFullScreen) {
-        element.webkitRequestFullScreen();
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-      } else if (element.msRequestFullscreen) {
-        // IE11
-        element.msRequestFullscreen();
-      }
-      // this.fullscreen = !this.fullscreen;
+      element.requestFullscreen();
     },
   },
 };
