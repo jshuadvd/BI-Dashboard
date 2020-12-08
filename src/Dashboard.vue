@@ -5,8 +5,11 @@
     <div class="bi-sidenav">
       <sidenav
       :nameExist="nameExist"
+      defaultName="报表1"
       @add-rich-text="addRichText"
-      @add-title-text="addTitleText"/>
+      @add-title-text="addTitleText"
+      @save-as-image="saveAsImage"
+      @save-as-pdf="saveAsPdf" />
     </div>
 
     <v-toolbar class="bi-app-bar" dense>
@@ -62,6 +65,8 @@
 </template>
 
 <script>
+import domtoimage from 'dom-to-image';
+import { jsPDF } from 'jspdf';
 import { mapState } from 'vuex';
 import { fetchDashboardTitle, updateDashboard, getDashboardComponents } from '@/utils/api';
 import Chart from '@/config/Chart';
@@ -294,6 +299,50 @@ export default {
     preView() {
       const element = document.getElementById('print');
       element.requestFullscreen();
+    },
+    saveAsPdf(fileName) {
+      const node = document.getElementById('print');
+      const scale = 3;
+      domtoimage.toPng(node, {
+        width: node.scrollWidth * scale,
+        height: node.parentNode.scrollHeight * scale,
+        style: {
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+        },
+      }).then((dataUrl) => {
+        const JsPDF = jsPDF;
+        const pdf = new JsPDF('p', 'px', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const widthRatio = pageWidth / node.scrollWidth;
+        const heightRatio = pageHeight / node.parentNode.scrollHeight;
+        const ratio = widthRatio > heightRatio ? heightRatio : widthRatio;
+
+        const realWidth = node.scrollWidth * ratio;
+        const realHeight = node.parentNode.scrollHeight * ratio;
+
+        pdf.addImage(dataUrl, 'png', 0, 0, realWidth, realHeight);
+        pdf.save(`${fileName}.pdf`);
+      });
+    },
+    saveAsImage(fileName) {
+      const node = document.getElementById('print');
+      const scale = 3;
+      domtoimage.toJpeg(node, {
+        width: node.scrollWidth * scale,
+        height: node.parentNode.scrollHeight * scale,
+        style: {
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+        },
+      }).then((dataUrl) => {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `${fileName}.jpeg`;
+        link.click();
+      });
     },
   },
 };

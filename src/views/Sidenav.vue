@@ -66,6 +66,10 @@
 
     <div v-if="choseId===-1" class="container">
       <div class="footer">
+        <export-menu :default-name="defaultFileName"
+        @save-as-image="saveAsImage"
+        @save-as-pdf="saveAsPdf" />
+        <br>
         <v-btn
           dense
           block
@@ -90,10 +94,12 @@ import { VSelect } from 'vuetify/lib';
 import TimePicker from '../site/components/small/TimePicker.vue';
 import TimepickerWrapperVue from '../config/setting/TimepickerWrapper.vue';
 import Btngroup from '../config/setting/Btngroup.vue';
+import ExportMenu from '../components/exportmenu/ExportMenu.vue';
 
 export default {
   props: {
     nameExist: Boolean,
+    defaultName: String,
   },
   data() {
     return {
@@ -106,6 +112,7 @@ export default {
         { range: [0, 500], value: 20, label: '左' },
         { range: [0, 500], value: 20, label: '右' },
       ],
+      defaultFileName: this.defaultName,
     };
   },
 
@@ -114,6 +121,7 @@ export default {
     TimePicker,
     TimepickerWrapperVue,
     BiBtnGroup: Btngroup,
+    ExportMenu,
   },
 
   computed: {
@@ -145,6 +153,13 @@ export default {
     },
     addTitleText() {
       this.$emit('add-title-text');
+    },
+
+    saveAsImage(fileName) {
+      this.$emit('save-as-image', fileName);
+    },
+    saveAsPdf(fileName) {
+      this.$emit('save-as-pdf', fileName);
     },
   },
 };
@@ -186,7 +201,7 @@ export default {
       justify-content: flex-end;
       height: 100%;
       .footer {
-        height: 15vh;
+        height: 20vh;
       }
     }
   }
