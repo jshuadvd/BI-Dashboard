@@ -2,6 +2,7 @@
   <v-sheet :class="['bi-main', drawer?'hide-drawer':'']">
     <div class="bi-sidenav">
       <sidenav
+      :nameExist="nameExist"
       @add-rich-text="addRichText"
       @add-title-text="addTitleText"/>
     </div>
@@ -56,10 +57,11 @@
     <div class="bi-canvas" >
       <!-- main -->
       <!-- <RichTextVue
-      :status="header"
+      v-if="titleExist "
+      :status="titleStatus"
       class="header">
       </RichTextVue> -->
-      <Canvas  id='print' :layout="layout" @del-item="delItem" />
+      <Canvas id='print' :layout="layout" @del-item="delItem" />
     </div>
   </v-sheet>
 </template>
@@ -87,13 +89,10 @@ export default {
     edited: false,
     // 编辑还是保存
     dashStatus: 0,
-    header: '<h1><strong class="ql-size-large">医保智能监测系统</strong></h1>',
-    author: 'VAG',
     layout: [],
-    fullscreen: false,
     del: [],
+    nameExist: false,
   }),
-
   computed: {
     ...mapState({
       charts: (state) => state.charts,
@@ -102,16 +101,12 @@ export default {
     titleMap: {
       set(value) {
         this.$store.dispatch('updateTitle', value);
-        // console.log(this.title);
       },
       get() {
         return this.title;
       },
     },
   },
-  // destroyed() {
-  //   console.log('destroyed.');
-  // },
   watch: {
     charts: {
       handler(value) {
@@ -137,8 +132,9 @@ export default {
             w: chart.status.size.w || 6,
             h: chart.status.size.h || 12,
             backid: chart.backid,
+            isTitle: chart.isTitle,
             i: chart.id,
-            drag: true,
+            drag: (chart.isTitle !== true),
             type: chart.type,
             setting: chart.setting,
             status: chart.status,
@@ -150,8 +146,9 @@ export default {
           w: chart.status.size.w || 6,
           h: chart.status.size.h || 12,
           backid: chart.backid,
+          isTitle: chart.isTitle,
           i: chart.id,
-          drag: true,
+          drag: (chart.isTitle !== true),
           type: chart.type,
           setting: chart.setting,
           status: {
@@ -163,16 +160,42 @@ export default {
       });
     },
     addTitleText() {
-      const status = {
-        data: {
-          content: '<h1 class="ql-align-center"><strong class="ql-size-large">医保智能监测系统</strong></h1>',
-          isTitle: true,
-        },
-        size: { w: 12, h: 4 },
-        backid: -1,
-      };
-      const data = new Chart('richtext', status, null);
-      this.$store.dispatch('addChart', data);
+      if (this.nameExist !== true) {
+        this.layout.forEach((layout, index) => {
+          if (this.layout[index].status && this.layout[index].status.size) {
+            this.$store.dispatch('updateChartData',
+              {
+                choseId: index,
+                data: {
+                  h: layout.h, w: layout.w, x: layout.x, y: layout.y + 3,
+                },
+                pro: 'size',
+              });
+          }
+        });
+        const status = {
+          data: {
+            content: '<h1 class="ql-align-center"><strong class="ql-size-large">医保智能监测系统</strong></h1>',
+            isTitle: true,
+          },
+          size: {
+            w: 12, h: 3,
+          },
+          backid: -1,
+        };
+        const data = new Chart('richtext', status, null);
+        this.$store.dispatch('addChart', data);
+        this.nameExist = true;
+      } else {
+        let i;
+        for (i = 0; i < this.layout.length; i++) {
+          if (this.layout[i].isTitle === true) { break; }
+        }
+        this.delItem(i);
+        // console.log(this.charts);
+        this.nameExist = false;
+      }
+      console.log('add', this.nameExist);
     },
     addRichText() {
       const status = {
@@ -180,16 +203,20 @@ export default {
           content: '<h1>测试文本测试文本测试文本测试文本</h1>',
           isTitle: false,
         },
-        size: { w: 6, h: 4 },
+        size: {
+          x: 0, y: 0, w: 6, h: 4,
+        },
         backid: -1,
       };
       const data = new Chart('richtext', status, null);
       this.$store.dispatch('addChart', data);
     },
     delItem(ind) {
-      for (let index = 0; index < this.layout.length; index++) {
+      let index;
+      for (index = 0; index < this.layout.length; index++) {
         if (this.layout[index].i === ind) {
           this.del.push(this.layout[index].backid);
+          break;
         }
       }
       this.$store.dispatch('deleteChart', ind);
@@ -223,9 +250,13 @@ export default {
           },
           backid: value.id,
         };
+        if (value.config.status.data && value.config.status.data.isTitle) {
+          this.nameExist = true;
+        }
         const chart = new Chart(comp.type, status, comp.setting);
         this.$store.dispatch('addChart', chart);
       });
+      console.log(this.nameExist);
     },
     async saveDashboard() {
       const settings = [];
@@ -252,27 +283,7 @@ export default {
     },
     preView() {
       const element = document.getElementById('print');
-      if (this.fullscreen) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      } else if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.webkitRequestFullScreen) {
-        element.webkitRequestFullScreen();
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-      } else if (element.msRequestFullscreen) {
-        // IE11
-        element.msRequestFullscreen();
-      }
-      // this.fullscreen = !this.fullscreen;
+      element.requestFullscreen();
     },
   },
 };

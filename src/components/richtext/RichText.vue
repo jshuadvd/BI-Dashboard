@@ -89,7 +89,9 @@ export default {
   },
   methods: {
     onEditorBlur(editor) {
-      this.$emit('fixed-text', true);
+      if (this.isTitle !== true) {
+        this.$emit('fixed-text', true);
+      }
     },
     onEditorFocus(editor) {
       this.$emit('fixed-text', false);
@@ -101,6 +103,7 @@ export default {
         isTitle: this.isTitle,
       };
       this.$store.dispatch('updateTextContent', { choseId: this.choseId, data });
+      // console.log(this.content);
     },
     // 准备编辑器
     onEditorReady(editor) {

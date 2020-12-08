@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { updateDashboard } from '@/utils/api';
 import { fetchFeeTimeSeries } from '../utils/http';
 
 Vue.use(Vuex);
@@ -38,9 +37,8 @@ export default new Vuex.Store({
     },
 
     ADD_CHART(state, chart) {
-      console.log('add chart', chart);
+      // console.log('add chart', chart);
       state.charts = [...state.charts, chart];
-      console.log(state.charts);
     },
 
     updatemenu(state, payload) {
@@ -53,7 +51,7 @@ export default new Vuex.Store({
     },
 
     deleteChart(state, id) {
-      state.charts = state.charts.filter((chart) => chart.id !== id);
+      state.charts = state.charts.filter((chart, index) => index !== id);
     },
 
     changeChartProperty(state, payload) {

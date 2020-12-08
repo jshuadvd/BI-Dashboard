@@ -22,6 +22,7 @@
       :i="item.i"
       :key="index"
       :is-draggable="item.drag"
+      :class ="{bititle:item.isTitle===true}"
       @resized="resizedEvent"
       @moved="movedEvent"
     >
@@ -33,6 +34,7 @@
           @fixed-text="fixed(item.i,$event)"
         />
         <v-btn
+          v-if="!item.isTitle"
           small depressed
           class="bi-btn"
           @click="delItem(item.i)"
@@ -228,7 +230,13 @@ export default {
   top:0px;
   right:0px;
 }
-
+.bititle{
+  border:hidden !important;
+  width: 100% !important;
+  // height: 90px !important;
+  // line-height: 200% !important;
+  // position:absolute !important;
+}
 .bi-grid-layout {
   .item-wrapper {
     width: 100%;

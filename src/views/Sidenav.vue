@@ -68,7 +68,7 @@
         dense
         block
         @click="addTitleText">
-        添加标题
+        {{btnname}}
       </v-btn>
       <br>
       <v-btn
@@ -89,7 +89,9 @@ import TimepickerWrapperVue from '../config/setting/TimepickerWrapper.vue';
 import Btngroup from '../config/setting/Btngroup.vue';
 
 export default {
-
+  props: {
+    nameExist: Boolean,
+  },
   data() {
     return {
       // 切换tab
@@ -114,12 +116,15 @@ export default {
   computed: {
     ...mapState({
       choseId: (state) => state.choseId,
-
       contents: (state) => (state.charts[state.choseId] ? state.charts[state.choseId].setting : {}),
     }),
-
+    btnname() {
+      if (this.nameExist === true) {
+        return '删除标题';
+      }
+      return '添加标题';
+    },
   },
-
   methods: {
     addItem() {
       this.$emit('add-item');
