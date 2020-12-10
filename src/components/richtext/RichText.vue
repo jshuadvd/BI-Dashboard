@@ -117,8 +117,11 @@ export default {
   height: 100%;
   width: 100%;
 }
+// .ql-container{
+//     position: relative;
+//     z-index: 99;
+// }
 .ql-bubble .ql-tooltip {
     border-radius: 5px;
-    z-index: 1;
 }
 </style>

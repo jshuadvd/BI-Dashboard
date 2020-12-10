@@ -80,7 +80,6 @@ export default {
   components: {
     Canvas,
     Sidenav,
-    // RichTextVue,
   },
 
   data: () => ({
@@ -232,7 +231,7 @@ export default {
       let index;
       for (index = 0; index < this.layout.length; index++) {
         if (this.layout[index].i === ind) {
-          this.del.push(this.layout[index].backid);
+          this.del.push(this.layout[ind].backid);
           break;
         }
       }
@@ -274,7 +273,6 @@ export default {
         const chart = new Chart(comp.type, status, comp.setting);
         this.$store.dispatch('addChart', chart);
       });
-      console.log(this.nameExist);
     },
     async saveDashboard() {
       const settings = [];
@@ -294,7 +292,7 @@ export default {
       });
       const data = await updateDashboard({
         id: 3,
-        title: this.title,
+        title: this.titles[0],
         settings,
         del: this.del,
       });

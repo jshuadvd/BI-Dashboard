@@ -22,7 +22,7 @@
       :i="item.i"
       :key="index"
       :is-draggable="item.drag"
-      :class ="{bititle:item.isTitle===true}"
+      :class ="{'bi-title':item.isTitle===true, 'bi-text':item.type==='richtext'}"
       @resized="resizedEvent"
       @moved="movedEvent"
     >
@@ -234,12 +234,13 @@ export default {
   top:0px;
   right:0px;
 }
-.bititle{
+.bi-title{
   border:hidden !important;
   width: 100% !important;
-  // height: 90px !important;
-  // line-height: 200% !important;
-  // position:absolute !important;
+}
+.bi-text{
+  z-index: 99;
+
 }
 .bi-grid-layout {
   .item-wrapper {
